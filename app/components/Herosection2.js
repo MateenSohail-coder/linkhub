@@ -13,12 +13,10 @@ export default function Herosection2() {
       {/* Left side */}
       <div className="w-full md:w-[40%] h-[90vh] md:h-full flex flex-col gap-12 justify-start md:justify-center">
         <div className="heading text-5xl md:text-6xl font-extrabold text-[#502274]">
-          Everything you are. In one, simple link in bio.
+          Create and customize your Linktree in minutes
         </div>
         <div className="des text-xl text-white">
-          Join 70M+ people using Linktree for their link in bio. One link to
-          help you share everything you create, curate and sell from your
-          Instagram, TikTok, Twitter, YouTube and other social media profiles.
+  Connect your TikTok, Instagram, Twitter, website, store, videos, music, podcast, events and more. It all comes together in a link in bio landing page designed to convert.
         </div>
         <div>
           <button className="text-white px-4 py-2 md:py-4 font-bold text-1xl bg-[#502274] rounded-full">

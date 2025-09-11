@@ -7,8 +7,8 @@ export default function Navbar() {
 menu.current.src=""
     }
   return (
-<>
-      <nav className={`flex bg-white items-center z-50  ${!isOpen?"relative":"fixed left-3"} transition-all duration-900 justify-between w-[90%] py-2 md:py-2.5 px-5 md:px-10 rounded-full mx-auto`}>
+<div className='flex items-center justify-center w-full'>
+      <nav className={`flex bg-white items-center top-15 z-50 fixed transition-all duration-900 justify-between w-[90%] py-2 md:py-2.5 px-5 md:px-10 rounded-full mx-auto`}>
      <div className='flex items-center gap-8'>
            <div className="brand cursor-pointer ">
          <svg
@@ -60,7 +60,7 @@ menu.current.src=""
    </ul>
 
       </div>
-      </>
+      </div>
 
   )
 }

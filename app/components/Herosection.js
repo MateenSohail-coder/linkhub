@@ -3,8 +3,9 @@ import Navbar from "./Navbar.js";
 export default function Heroection() {
   return (
     <>
-      <div className="bg-[#254f1a] h-[200vh] md:h-[120vh] py-15">
-        <Navbar />
+            <Navbar />
+
+      <div className="bg-[#254f1a] h-[200vh] md:h-[120vh] pt-25 py-15">
         <section className="md:px-15 px-6 flex flex-col md:flex-row md:justify-between justify-center items-center h-full">
           {/* Left side */}
           <div className="w-full md:w-[40%] h-[90vh] md:h-full flex flex-col gap-12 justify-start md:justify-center">

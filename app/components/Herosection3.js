@@ -8,12 +8,10 @@ export default function Herosection3() {
       {/* Left side */}
       <div className="w-full md:w-[40%] h-[90vh] md:h-full flex flex-col gap-12 justify-start md:justify-center">
         <div className="heading text-5xl md:text-6xl font-extrabold text-[#e9c0e9]">
-          Everything you are. In one, simple link in bio.
+          Share your Linktree from your Instagram, TikTok, Twitter and other bios
         </div>
         <div className="des text-xl text-white">
-          Join 70M+ people using Linktree for their link in bio. One link to
-          help you share everything you create, curate and sell from your
-          Instagram, TikTok, Twitter, YouTube and other social media profiles.
+      Add your unique Linktree URL to all the platforms and places you find your audience. Then use your QR code to drive your offline traffic online.
         </div>
         <div>
           <button className="text-neutral-800 px-4 py-2 md:py-4 font-bold text-1xl bg-[#e9c0e9] rounded-full">
