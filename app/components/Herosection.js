@@ -1,9 +1,17 @@
+"use client";
 import Image from "next/image";
 import Navbar from "./Navbar.js";
+import { useState } from "react";
+import { useRouter } from "next/navigation.js";
 export default function Heroection() {
+  const [text, settext] = useState("");
+  const router = useRouter();
+  const createtree = () => {
+    router.push(`/generate?handle=${text}`);
+  };
   return (
     <>
-            <Navbar />
+      <Navbar />
 
       <div className="bg-[#254f1a] h-[200vh] md:h-[120vh] pt-25 py-15">
         <section className="md:px-15 px-6 flex flex-col md:flex-row md:justify-between justify-center items-center h-full">
@@ -20,11 +28,20 @@ export default function Heroection() {
             </div>
             <div className="flex items-center gap-2.5">
               <input
+                value={text}
+                onChange={(e) => {
+                  settext(e.target.value);
+                }}
                 type="text"
+                placeholder="Linktr.ee/"
                 className="h-14 w-50 p-1 px-1.5 text-sm text-neutral-600 font-semibold bg-white rounded"
-                value="Linktr.ee/"
               />
-              <button className="px-4 py-2 md:py-4 font-bold text-sm text-neutral-800 bg-[#e9c0e9] rounded-full">
+              <button
+                onClick={() => {
+                  createtree();
+                }}
+                className="px-4 py-2 md:py-4 transition-all active:scale-[0.96] font-bold text-sm text-neutral-800 bg-[#e9c0e9] rounded-full"
+              >
                 Claim your Linktree
               </button>
             </div>

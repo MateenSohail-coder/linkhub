@@ -3,3 +3,18 @@
 body {
   overflow-x: hidden;
 }
+#form::-webkit-scrollbar {
+  width: 10px;
+  border: 1px solid rgb(99, 99, 99);
+}
+
+#form::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#form::-webkit-scrollbar-thumb {
+  background-color: #ffffff; /* green */
+}
+
+/* Make progress bar green and thicker */
+
