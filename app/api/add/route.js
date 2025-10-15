@@ -6,6 +6,10 @@ export async function POST(request) {
   const db = client.db("linktree");
   const collection = db.collection("links");
 
+  // Extract base URL from the incoming request
+  const origin =
+    request.headers.get("origin") || process.env.NEXT_PUBLIC_BASE_URL || "";
+
   // 1. Check for existing handle BEFORE inserting
   const existingDoc = await collection.findOne({ handle: body.handle });
 
@@ -13,8 +17,8 @@ export async function POST(request) {
     return Response.json({
       success: false,
       error: true,
-      message: "This Linktree already exists ! on",
-       link: `http://localhost:3000/${body.handle}`,
+      message: "This Linktree already exists!",
+      link: `${origin}/${body.handle}`,
       result: null,
     });
   }
@@ -25,8 +29,8 @@ export async function POST(request) {
   return Response.json({
     success: true,
     error: false,
-    message: "Linktree was created successfully ! on",
-     link: `http://localhost:3000/${body.handle}`,
-    result: result,
+    message: "Linktree was created successfully!",
+    link: `${origin}/${body.handle}`,
+    result,
   });
 }

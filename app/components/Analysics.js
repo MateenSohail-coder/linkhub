@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 export default function Analysics() {
   return (
     <section className="md:px-15 px-6 flex flex-col-reverse h-[200vh] md:h-screen bg-[#e8efd6] w-full md:flex-row md:justify-between justify-center items-center">
@@ -14,15 +15,17 @@ export default function Analysics() {
         <div className="heading text-5xl md:text-6xl font-extrabold text-[#1e2330]">
           Analyze your audience and keep your followers engaged
         </div>
-        <div className="des text-xl text-neutral-800">
-          Track your engagement over time, monitor revenue and learn what’s
+        <div className="des text-xl text-neutral-800 leading-relaxed">
+          Track your engagement over time, monitor revenue and learn what's
           converting your audience. Make informed updates on the fly to keep
           them coming back.
         </div>
         <div>
-          <button className="text-neutral-800 px-4 py-2 md:py-4 font-bold text-1xl bg-[#e9c0e9] rounded-full">
-            Get Started for free
-          </button>
+          <Link href="/generate">
+            <button className="text-neutral-800 px-4 py-2 md:py-4 font-bold text-1xl bg-[#e9c0e9] rounded-full hover:bg-[#d4a8d4] transition-colors">
+              Get Started for free
+            </button>
+          </Link>
         </div>
       </div>
     </section>

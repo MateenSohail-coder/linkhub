@@ -3,7 +3,7 @@ import Image from "next/image";
 import Navbar from "./Navbar.js";
 import { useState } from "react";
 import { useRouter } from "next/navigation.js";
-export default function Heroection() {
+export default function Herosection() {
   const [text, settext] = useState("");
   const router = useRouter();
   const createtree = () => {
@@ -20,7 +20,7 @@ export default function Heroection() {
             <div className="heading text-5xl md:text-7xl font-extrabold text-[#D2E823]">
               Everything you are. In one, simple link in bio.
             </div>
-            <div className="des text-xl text-white">
+            <div className="des text-xl text-white leading-relaxed">
               Join 70M+ people using Linktree for their link in bio. One link to
               help you share everything you create, curate and sell from your
               Instagram, TikTok, Twitter, YouTube and other social media
@@ -33,14 +33,14 @@ export default function Heroection() {
                   settext(e.target.value);
                 }}
                 type="text"
-                placeholder="Linktr.ee/"
-                className="h-14 w-50 p-1 px-1.5 text-sm text-neutral-600 font-semibold bg-white rounded"
+                placeholder="Linkhu.bb/"
+                className="h-14 w-60 p-1 px-1.5 text-sm text-neutral-600 font-semibold bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D2E823]"
               />
               <button
                 onClick={() => {
                   createtree();
                 }}
-                className="px-4 py-2 md:py-4 transition-all active:scale-[0.96] font-bold text-sm text-neutral-800 bg-[#e9c0e9] rounded-full"
+                className="px-4 py-2 md:py-4 transition-all active:scale-[0.96] font-bold text-sm text-neutral-800 bg-[#e9c0e9] rounded-full hover:bg-[#d4a8d4] focus:outline-none focus:ring-2 focus:ring-[#D2E823]"
               >
                 Claim your Linktree
               </button>

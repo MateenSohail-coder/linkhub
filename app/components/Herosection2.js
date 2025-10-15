@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Herosection2() {
   return (
@@ -15,13 +16,17 @@ export default function Herosection2() {
         <div className="heading text-5xl md:text-6xl font-extrabold text-[#502274]">
           Create and customize your Linktree in minutes
         </div>
-        <div className="des text-xl text-white">
-  Connect your TikTok, Instagram, Twitter, website, store, videos, music, podcast, events and more. It all comes together in a link in bio landing page designed to convert.
+        <div className="des text-xl text-white leading-relaxed">
+          Connect your TikTok, Instagram, Twitter, website, store, videos,
+          music, podcast, events and more. It all comes together in a link in
+          bio landing page designed to convert.
         </div>
         <div>
-          <button className="text-white px-4 py-2 md:py-4 font-bold text-1xl bg-[#502274] rounded-full">
-            Get Started for free
-          </button>
+          <Link href="/generate">
+            <button className="text-white px-4 py-2 md:py-4 font-bold text-1xl bg-[#502274] rounded-full hover:bg-[#3a1d5c] transition-colors">
+              Get Started for free
+            </button>
+          </Link>
         </div>
       </div>
     </section>
