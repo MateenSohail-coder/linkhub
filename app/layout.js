@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Linktree -- only one link in bio",
-  description: "Linktree -- only one link in bio",
+  title: "Linkhub -- only one link in bio",
+  description: "Linkthub-- only one link in bio",
 };
 
 export default function RootLayout({ children }) {

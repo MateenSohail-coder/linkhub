@@ -1,96 +1,176 @@
 "use client";
-import React, { useRef, useState } from "react";
+
+import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
+import { Menu, X, LogOut } from "lucide-react";
+
 export default function Navbar() {
-  const [isOpen, setisOpen] = useState(false);
-  const menu = useRef(null);
-  if (isOpen) {
-    menu.current.src = "";
-  }
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    router.push("/");
+  };
+
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "About", path: "/about" },
+    { name: "All Pages", path: "/allpages" },
+  ];
+
   return (
     <div className="flex items-center justify-center w-full">
-      <nav
-        className={`flex bg-white items-center top-10 z-50 fixed transition-all duration-900 justify-between w-[90%] py-2 md:py-2.5 px-5 md:px-10 rounded-full mx-auto`}
-      >
-        <Link href="/">
-          <div className="brand flex items-center gap-2 cursor-pointer ">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-8 h-8 "
-              viewBox="0 0 24 24"
-              // xml:space is removed because React does not support it
-            >
-              <path d="m13.511 5.853 4.005-4.117 2.325 2.381-4.201 4.005h5.909v3.305h-5.937l4.229 4.108-2.325 2.334-5.741-5.769-5.741 5.769-2.325-2.325 4.229-4.108H2V8.122h5.909L3.708 4.117l2.325-2.381 4.005 4.117V0h3.473v5.853zM10.038 16.16h3.473v7.842h-3.473V16.16z" />
-            </svg>
-            <p className="font-bold text-2xl font-mono hidden md:block">
-              Linkhub
-            </p>
+      <nav className="flex bg-white/80 backdrop-blur-xl shadow-lg items-center top-6 z-50 fixed transition-all duration-500 justify-between w-[92%] py-3 md:py-3.5 px-5 md:px-10 rounded-full mx-auto border border-neutral-200">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 cursor-pointer">
+          <div className="w-8 h-8 relative">
+            <Image src="/network.png" alt="Linkhub Logo" fill />
           </div>
+          <p className="font-bold text-2xl font-sans text-[#1E2330] hidden md:block">
+            Linkhub
+          </p>
         </Link>
-        <div className="flex items-center gap-8">
-          <div className="options list-none gap-5 hidden md:flex">
-            <li className="py-2 px-2.5 rounded cursor-pointer  hover:bg-neutral-100 active:bg-neutral-100 tracking-tight">
-              Products
-            </li>
-            <li className="py-2 px-2.5 rounded cursor-pointer  hover:bg-neutral-100 active:bg-neutral-100 tracking-tight">
-              Templates
-            </li>
-            <li className="py-2 px-2.5 rounded cursor-pointer  hover:bg-neutral-100 active:bg-neutral-100 tracking-tight">
-              Marketplace
-            </li>
-            <li className="py-2 px-2.5 rounded cursor-pointer  hover:bg-neutral-100 active:bg-neutral-100 tracking-tight">
-              Learn
-            </li>
-            <li className="py-2 px-2.5 rounded cursor-pointer  hover:bg-neutral-100 active:bg-neutral-100 tracking-tight">
-              Pricing
-            </li>
-          </div>
+
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              href={link.path}
+              className={`relative font-medium transition-all duration-200 ${
+                pathname === link.path
+                  ? "text-[#225ac0] font-semibold after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[2px] after:bg-[#225ac0]"
+                  : "text-neutral-700 hover:text-neutral-950"
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
+
+          {/* Desktop Auth Buttons */}
+          {isLoggedIn ? (
+            <>
+              {pathname !== "/dashboard" && (
+                <Link href="/dashboard">
+                  <button className="bg-gradient-to-r from-[#225ac0] to-[#1d4ed8] hover:from-[#1d4ed8] hover:to-[#225ac0] text-sm cursor-pointer py-3 px-5 rounded-full text-white font-semibold shadow-md transition-all duration-200 active:scale-[0.97]">
+                    Dashboard
+                  </button>
+                </Link>
+              )}
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-1 text-sm text-neutral-700 hover:text-red-600 transition-colors"
+              >
+                <LogOut size={18} />
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login">
+                <button className="text-sm cursor-pointer py-3 px-5 rounded-full text-[#1E2330] font-semibold hover:text-[#225ac0] transition-all duration-200">
+                  Login
+                </button>
+              </Link>
+              <Link href="/register">
+                <button className="bg-gradient-to-r from-[#225ac0] to-[#1d4ed8] hover:from-[#1d4ed8] hover:to-[#225ac0] text-sm cursor-pointer py-3 px-5 rounded-full text-white font-semibold shadow-md transition-all duration-200 active:scale-[0.97]">
+                  Get Started
+                </button>
+              </Link>
+            </>
+          )}
         </div>
 
-        <div className="buttons flex gap-3 items-center">
-          <Link href="/generate">
-            <button className="bg-[#1E2330] hover:bg-[#2f3647] text-[12px] md:text-sm cursor-pointer py-3 md:py-4 rounded-full text-white font-bold px-2.5 md:px-5">
-              Get Started for free
-            </button>
-          </Link>
-          <div
-            onClick={() => setisOpen(!isOpen)}
-            className={`block md:hidden p-1.5 rounded-full ${
-              isOpen ? "bg-[#D2E823]" : ""
+        {/* Mobile Menu + Auth Buttons */}
+        <div className="flex gap-2 items-center md:hidden">
+          {isLoggedIn ? (
+            <>
+              {pathname !== "/dashboard" && (
+                <Link
+                  href="/dashboard"
+                  className="px-3 py-2 bg-gradient-to-r from-[#225ac0] to-[#1d4ed8] text-white rounded-full text-sm font-semibold shadow-md"
+                >
+                  Dashboard
+                </Link>
+              )}
+              <button
+                onClick={handleLogout}
+                className="px-3 py-2 flex items-center gap-1 text-red-600 rounded-full bg-white/20 font-semibold shadow-md"
+              >
+                <LogOut size={16} />
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="px-3 py-2 text-[#1E2330] rounded-full text-sm font-semibold bg-white/20 hover:bg-white/30 transition-all"
+              >
+                Login
+              </Link>
+              <Link
+                href="/register"
+                className="px-3 py-2 bg-gradient-to-r from-[#225ac0] to-[#1d4ed8] text-white rounded-full text-sm font-semibold shadow-md"
+              >
+                Get Started
+              </Link>
+            </>
+          )}
+
+          {/* Hamburger */}
+          <button
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+            className={`p-2 rounded-full transition-all duration-300 ${
+              isOpen ? "bg-[#D2E823]" : "bg-transparent"
             }`}
           >
-            <img
-              ref={menu}
-              src={!isOpen ? "/menu.svg" : "/cross.svg"}
-              className="h-7 w-7 bg-cover"
-              alt="Menu Icon"
-            />
-          </div>
+            {isOpen ? (
+              <X className="h-6 w-6 text-black" />
+            ) : (
+              <Menu className="h-6 w-6 text-black" />
+            )}
+          </button>
         </div>
       </nav>
+
+      {/* Mobile Drawer */}
       <div
-        className={`menu fixed top-0 right-0 h-screen w-screen z-40 flex flex-col items-start justify-center bg-neutral-50 list-none transition-transform duration-400 ${
+        className={`fixed inset-0 z-40 bg-white/95 backdrop-blur-md flex flex-col items-center justify-center transition-transform duration-500 ease-in-out ${
           isOpen
-            ? "translate-x-0 pointer-events-auto"
-            : "translate-x-[100vw] pointer-events-none"
+            ? "translate-x-0 opacity-100 pointer-events-auto"
+            : "translate-x-[100vw] opacity-0 pointer-events-none"
         }`}
       >
-        <ul className="text-xl font-semibold flex flex-col w-full">
-          <li className="max-w-full py-5 active:bg-neutral-200 px-2 mx-3 border-b-1 border-b-neutral-200">
-            Products
-          </li>
-          <li className="max-w-full py-5 active:bg-neutral-200 px-2 mx-3 border-b-1 border-b-neutral-200">
-            Templates
-          </li>
-          <li className="max-w-full py-5 active:bg-neutral-200 px-2 mx-3 border-b-1 border-b-neutral-200">
-            Marketplace
-          </li>
-          <li className="max-w-full py-5 active:bg-neutral-200 px-2 mx-3 border-b-1 border-b-neutral-200">
-            Learn
-          </li>
-          <li className="max-w-full py-5 active:bg-neutral-200 px-2 mx-3 border-b-1 border-b-neutral-200">
-            Pricing
-          </li>
+        <ul className="text-xl font-semibold flex flex-col w-full max-w-md text-center">
+          {navLinks.map((link) => (
+            <Link
+              key={link.path}
+              href={link.path}
+              onClick={() => setIsOpen(false)}
+              className={`block py-4 mx-8 rounded-xl transition-all duration-300 ${
+                pathname === link.path
+                  ? "bg-[#225ac0] text-white"
+                  : "text-neutral-800 hover:bg-neutral-200"
+              }`}
+            >
+              {link.name}
+            </Link>
+          ))}
         </ul>
       </div>
     </div>

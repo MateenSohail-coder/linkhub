@@ -3,56 +3,87 @@ import Image from "next/image";
 import Navbar from "./Navbar.js";
 import { useState } from "react";
 import { useRouter } from "next/navigation.js";
+import { motion } from "framer-motion";
+
 export default function Herosection() {
-  const [text, settext] = useState("");
+  const [text, setText] = useState("");
   const router = useRouter();
-  const createtree = () => {
+
+  const createTree = () => {
+    if (!text.trim()) return;
     router.push(`/generate?handle=${text}`);
   };
+
   return (
     <>
       <Navbar />
 
-      <div className="bg-[#254f1a] h-[200vh] md:h-[120vh] pt-25 py-15">
-        <section className="md:px-15 px-6 flex flex-col md:flex-row md:justify-between justify-center items-center h-full">
-          {/* Left side */}
-          <div className="w-full md:w-[40%] h-[90vh] md:h-full flex flex-col gap-12 justify-start md:justify-center">
-            <div className="heading text-5xl md:text-7xl font-extrabold text-[#D2E823]">
-              Everything you are. In one, simple link in bio.
-            </div>
-            <div className="des text-xl text-white leading-relaxed">
-              Join 70M+ people using Linktree for their link in bio. One link to
-              help you share everything you create, curate and sell from your
-              Instagram, TikTok, Twitter, YouTube and other social media
-              profiles.
-            </div>
-            <div className="flex items-center gap-2.5">
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-br from-[#1a2a6c] via-[#225ac0] to-[#8a4fff] min-h-screen pt-32 md:pt-40 pb-20 flex items-center justify-center overflow-hidden text-white">
+        <section className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 md:px-20 gap-16">
+          {/* Left Content */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="w-full md:w-[50%] flex flex-col gap-8 justify-center"
+          >
+            <h1 className="text-5xl md:text-6xl font-extrabold leading-tight bg-clip-text text-transparent bg-gradient-to-r from-[#D2E823] to-white drop-shadow-lg">
+              One link to share <br className="hidden md:block" /> everything
+              you are — for free.
+            </h1>
+
+            <p className="text-lg md:text-xl text-white/90 leading-relaxed">
+              Connect all your links, profiles, and content in one sleek,
+              personalized page. Join{" "}
+              <span className="font-semibold text-[#D2E823]">thousands</span> of
+              creators using
+              <span className="font-semibold text-white"> LinkHub </span> to
+              grow their digital presence.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center gap-3 mt-2">
               <input
                 value={text}
-                onChange={(e) => {
-                  settext(e.target.value);
-                }}
+                onChange={(e) => setText(e.target.value)}
                 type="text"
-                placeholder="Linkhu.bb/"
-                className="h-14 w-60 p-1 px-1.5 text-sm text-neutral-600 font-semibold bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#D2E823]"
+                placeholder="linkhu.bb/yourname"
+                className="h-14 w-full sm:w-64 px-4 text-sm text-neutral-800 font-semibold bg-white rounded-lg shadow-md focus:outline-none focus:ring-4 focus:ring-[#D2E823]/60 transition-all"
               />
               <button
-                onClick={() => {
-                  createtree();
-                }}
-                className="px-4 py-2 md:py-4 transition-all active:scale-[0.96] font-bold text-sm text-neutral-800 bg-[#e9c0e9] rounded-full hover:bg-[#d4a8d4] focus:outline-none focus:ring-2 focus:ring-[#D2E823]"
+                onClick={createTree}
+                className="px-6 py-3 sm:py-4 bg-[#D2E823] text-sm md:text-base font-bold text-neutral-900 rounded-full hover:bg-[#c1da1f] active:scale-[0.97] transition-all duration-200 shadow-lg focus:outline-none focus:ring-4 focus:ring-[#D2E823]/50"
               >
-                Claim your Linktree
+                Claim your Linkhub
               </button>
             </div>
-          </div>
-          {/* Right side */}
-          <div className="md:w-[50%] w-screen h-[80vh] md:h-full relative flex items-center justify-center">
-            <div className="w-[60%] md:w-[50%] rounded-2xl overflow-hidden h-[80%] relative">
-              <Image src="/card3.png" fill alt="image" />
+          </motion.div>
+
+          {/* Right Visual Preview */}
+          <motion.div
+            initial={{ opacity: 0, x: 60 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="w-full md:w-[50%] flex items-center justify-center relative"
+          >
+            <div className="w-[70%] md:w-[60%] aspect-[3/4] rounded-3xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.35)] border border-white/20 bg-white/10 backdrop-blur-md relative">
+              <Image
+                src="/linktree.png"
+                alt="Linkhub Preview"
+                fill
+                priority
+                className="object-cover"
+              />
             </div>
-          </div>
+
+            {/* Soft Glow Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-white/10 rounded-3xl pointer-events-none"></div>
+          </motion.div>
         </section>
+
+        {/* Background Glow Blobs */}
+        <div className="absolute top-10 left-10 w-72 h-72 bg-[#D2E823]/30 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-72 h-72 bg-[#8a4fff]/30 rounded-full blur-3xl animate-pulse"></div>
       </div>
     </>
   );

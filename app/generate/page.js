@@ -1,250 +1,398 @@
 "use client";
-import { ToastContainer, toast, Bounce } from "react-toastify";
-import React, { useState } from "react";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-export default function page() {
+import { Trash2, PlusCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import { ArrowBigLeft } from "lucide-react";
+export default function GeneratePage() {
   const searchparams = useSearchParams();
   const [loading, setLoading] = useState(false);
-  const [links, setlinks] = useState([{ link: "", linktext: "" }]);
-  const [handle, sethandle] = useState(searchparams.get("handle"));
-  const [pic, setpic] = useState("");
-  const [des, setdes] = useState("");
+  const [links, setLinks] = useState([{ link: "", linktext: "" }]);
+  const [handle, setHandle] = useState(searchparams.get("handle") || "");
+  const [handleError, setHandleError] = useState("");
+  const [pic, setPic] = useState("");
+  const [des, setDes] = useState("");
+  const [theme, setTheme] = useState("blue");
+  const [router, setRouter] = useState("");
+  const [imgError, setImgError] = useState(false);
+  const [validPic, setValidPic] = useState(pic);
+
+  // ✅ Check if pic URL is valid
+  useEffect(() => {
+    if (!pic) {
+      setValidPic(null);
+      setImgError(true);
+      return;
+    }
+
+    const img = new window.Image(); // ← use window.Image here
+    img.src = pic;
+    img.onload = () => {
+      setValidPic(pic);
+      setImgError(false);
+    };
+    img.onerror = () => {
+      setValidPic(null);
+      setImgError(true);
+    };
+  }, [pic]);
+
+  const themes = {
+    blue: {
+      bg: "from-[#1e3a8a] via-[#1e40af] to-[#1d4ed8]",
+      accent: "#D2E823",
+      button: "bg-[#D2E823] text-[#1a2a6c] hover:bg-white hover:text-[#225ac0]",
+    },
+    purple: {
+      bg: "from-[#3b0764] via-[#6d28d9] to-[#9333ea]",
+      accent: "#D2E823",
+      button: "bg-[#D2E823] text-[#3b0764] hover:bg-white hover:text-[#6d28d9]",
+    },
+    green: {
+      bg: "from-[#064e3b] via-[#047857] to-[#059669]",
+      accent: "#D2E823",
+      button: "bg-[#D2E823] text-[#064e3b] hover:bg-white hover:text-[#059669]",
+    },
+    orange: {
+      bg: "from-[#7c2d12] via-[#c2410c] to-[#f97316]",
+      accent: "#D2E823",
+      button: "bg-[#D2E823] text-[#7c2d12] hover:bg-white hover:text-[#f97316]",
+    },
+    blackGreen: {
+      bg: "from-[#000000] via-[#064e3b] to-[#059669]", // black to green gradient
+      accent: "#D2E823", // yellow accent
+      button: "bg-[#D2E823] text-[#000000] hover:bg-white hover:text-[#059669]", // button style
+    },
+  };
+
+  const currentTheme = themes[theme] || themes.blue;
+
   const handleChange = (index, field, value) => {
-    setlinks((prevLinks) =>
-      prevLinks.map((item, i) =>
-        i === index ? { ...item, [field]: value } : item
-      )
+    setLinks((prev) =>
+      prev.map((item, i) => (i === index ? { ...item, [field]: value } : item))
     );
   };
-  const hasEmptyFields = links.some(
-  (item) => item.link.trim() === "" || item.linktext.trim() === ""
-);
 
-  const addlink = () => {
-    setlinks((prev) => [...prev, { link: "", linktext: "" }]);
+  const addLink = () =>
+    setLinks((prev) => [...prev, { link: "", linktext: "" }]);
+  const deleteLink = (index) =>
+    setLinks((prev) => prev.filter((_, i) => i !== index));
+
+  const handleHandleChange = (value) => {
+    if (/\s/.test(value)) {
+      setHandleError(
+        "Handle cannot contain spaces! you can use' _ 'or' - 'instead."
+      );
+    } else {
+      setHandleError("");
+    }
+    setHandle(value);
   };
 
-  const submitlinks = async () => {
-    if (hasEmptyFields) {
-  toast.error("Please fill out all Link Fields !",{
-    autoClose: 2000,
-    hideProgressBar: true,
-  })
-}
-  else{
-      setLoading(true);
-    let result = null; // <-- define here
+  const submitLinks = async () => {
+    if (links.some((item) => !item.link || !item.linktext)) {
+      toast.error("Please fill out all link fields!");
+      return;
+    }
+    if (!handle.trim()) {
+      toast.error("Please enter a handle!");
+      return;
+    }
+    if (handleError) {
+      toast.error(handleError);
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("You must log in to create your LinkHub!");
+      return;
+    }
+
+    setLoading(true);
     try {
-      const myHeaders = new Headers();
-      myHeaders.append("Content-Type", "application/json");
-      
-      const raw = JSON.stringify({
-        links: links,
-        handle: handle,
-        pic: pic,
-        des: des,
+      const fullLink = `${window.location.origin}/${handle}`;
+      const response = await fetch("/api/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          links,
+          handle,
+          pic,
+          des,
+          theme,
+          link: fullLink,
+        }),
       });
 
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-
-      const r = await fetch("http://localhost:3000/api/add", requestOptions);
-      result = await r.json();
-    } catch (error) {
-      console.error(error); // <-- use 'error', not 'err'
-      toast.error("Something went wrong");
+      const result = await response.json();
+      if (result.success) {
+        toast.success(
+          <div>
+            {result.message}
+            <br />
+            <a
+              href={result.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#D2E823] underline"
+            >
+              {result.link}
+            </a>
+          </div>
+        );
+        setLinks([{ link: "", linktext: "" }]);
+        setHandle("");
+        setPic("");
+        setDes("");
+        setTheme("blue");
+      } else {
+        toast.error(
+          <div>
+            {result.message}
+            <br />
+            <a
+              href={result.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#ff6c03] underline"
+            >
+              {result.link}
+            </a>
+          </div>
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Something went wrong!");
     } finally {
       setLoading(false);
-      console.log("Result object:", result);
-
-      if (result && result.message) {
-        console.log(
-          "result.success:",
-          result.success,
-          "Type:",
-          typeof result.success
-        );
-
-        if (result.success) {
-          toast.success(
-            <div>
-              {result.message}
-              <br />
-              <a
-                href={result.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-800 active:text-blue-950 underline"
-              >
-                {result.link}
-              </a>
-            </div>,
-            {
-              autoClose: 2500,
-            }
-          );
-        } else {
-          toast.error(
-            <div>
-              {result.message}
-              <br />
-              <a
-                href={result.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-red-500 active:text-red-700 underline"
-              >
-                {result.link}
-              </a>
-            </div>,
-            {
-              autoClose: 2500,
-            }
-          );
-        }
-
-        setlinks([{ link: "", linktext: "" }]);
-        sethandle("");
-        setpic("");
-        setdes("");
-      }
     }
-  }
   };
 
   return (
-    <section className="h-screen w-full flex">
+    <section
+      className={`min-h-screen w-full flex flex-col md:flex-row bg-gradient-to-br ${currentTheme.bg} text-white`}
+    >
       <ToastContainer />
-      <div
-        id="form"
-        className="h-full w-[55%] flex flex-col items-center py-20 gap-8 overflow-y-scroll bg-[#225ac0]"
+      {/* LEFT — Form Section */}
+      <Link
+        href="/dashboard"
+        className=" cursor-pointer absolute top-6 left-6 text-white/80 hover:text-white transition border border-white/20 px-3 py-2 rounded-full bg-white/10 hover:bg-white/20 flex items-center gap-2"
       >
-        <div className="text-5xl text-center font-bold text-[#c2d816]">
-          Create your Linktree
-        </div>
-        <div className="flex flex-col gap-4 w-[80%]">
-          <div className="flex flex-col gap-3">
-            <div className="step1 text-xl font-semibold text-start text-neutral-100">
-              Step 1 : Claim a handle
-            </div>
-            <input
-              value={handle || ""}
-              onChange={(e) => {
-                sethandle(e.target.value);
-              }}
-              type="text"
-              className="bg-neutral-100 py-3 w-full text-neutral-800 rounded-2xl px-3"
-              placeholder="Choose a handle"
-            />
-          </div>
-          <div className="flex flex-col gap-3">
-            <div className="step1 text-xl font-semibold text-start text-neutral-100">
-              Step 2 : Add Links
-            </div>
-            {links &&
-              links.map((item, index) => {
-                return (
-                  <div key={index} className="flex gap-3">
-                    <input
-                      value={item.linktext}
-                      onChange={(e) =>
-                        handleChange(index, "linktext", e.target.value)
-                      }
-                      type="text"
-                      className="bg-neutral-100 py-3 w-70 text-neutral-800 rounded-2xl px-3"
-                      placeholder="Enter a Link text"
-                    />
-
-                    <input
-                      value={item.link}
-                      onChange={(e) =>
-                        handleChange(index, "link", e.target.value)
-                      }
-                      type="text"
-                      className="bg-neutral-100 py-3 w-70 text-neutral-800 rounded-2xl px-3"
-                      placeholder="Enter a Link"
-                    />
-                  </div>
-                );
-              })}
-            <button
-              onClick={() => {
-                addlink();
-              }}
-              className="w-70 cursor-pointer hover:bg-white hover:text-[#ff6c03] active:bg-white active:text-[#ff6c03] active:scale-[0.96] transition-all  text-white py-2 px-1 font-bold bg-[#ff6c03] rounded-2xl"
+        <ArrowBigLeft />
+      </Link>
+      <motion.div
+        initial={{ opacity: 0, x: -30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6 }}
+        className="w-full md:w-[60%] flex flex-col items-center py-12 px-6 md:px-12 overflow-y-auto"
+      >
+        <h1
+          className="text-4xl md:text-5xl font-extrabold text-center mb-8"
+          style={{ color: currentTheme.accent }}
+        >
+          Create Your LinkHub
+        </h1>
+        <div className="flex flex-col gap-8 w-full max-w-2xl">
+          {/* Step 1: Handle */}
+          <div className="flex flex-col gap-1 bg-white/10 p-5 rounded-2xl border border-white/20 backdrop-blur-lg">
+            <h2
+              className="text-xl font-semibold"
+              style={{ color: currentTheme.accent }}
             >
-              + Add Links
+              Step 1: Claim a Handle
+            </h2>
+            <input
+              value={handle}
+              onChange={(e) => handleHandleChange(e.target.value)}
+              type="text"
+              className={`bg-white/90 text-gray-900 py-3 px-4 rounded-xl font-medium focus:ring-4 focus:ring-[#D2E823]/50 outline-none ${
+                handleError ? "border border-red-500" : ""
+              }`}
+              placeholder="Choose your unique handle"
+            />
+            {handleError && (
+              <p className="text-red-500 text-sm">{handleError}</p>
+            )}
+          </div>
+
+          {/* Step 2: Add Links */}
+          <div className="flex flex-col gap-4 bg-white/10 p-5 rounded-2xl border border-white/20 backdrop-blur-lg">
+            <h2
+              className="text-xl font-semibold"
+              style={{ color: currentTheme.accent }}
+            >
+              Step 2: Add Links
+            </h2>
+
+            {links.map((item, index) => (
+              <div
+                key={index}
+                className="flex flex-col sm:flex-row gap-3 items-center bg-white/10 p-4 rounded-xl border border-white/20"
+              >
+                <input
+                  value={item.linktext}
+                  onChange={(e) =>
+                    handleChange(index, "linktext", e.target.value)
+                  }
+                  type="text"
+                  placeholder="Link title (e.g. My Instagram)"
+                  className="flex-1 bg-white/90 text-gray-900 py-2.5 px-4 rounded-lg font-medium focus:ring-4 focus:ring-[#D2E823]/50 outline-none"
+                />
+                <input
+                  value={item.link}
+                  onChange={(e) => handleChange(index, "link", e.target.value)}
+                  type="text"
+                  placeholder="Enter full URL (https://...)"
+                  className="flex-1 bg-white/90 text-gray-900 py-2.5 px-4 rounded-lg font-medium focus:ring-4 focus:ring-[#D2E823]/50 outline-none"
+                />
+                {links.length > 1 && (
+                  <button
+                    onClick={() => deleteLink(index)}
+                    className="text-red-400 hover:text-red-600 p-2 transition-all"
+                  >
+                    <Trash2 size={22} />
+                  </button>
+                )}
+              </div>
+            ))}
+
+            <button
+              onClick={addLink}
+              className={`flex items-center justify-center gap-2 ${currentTheme.button} font-bold py-3 rounded-xl transition-all active:scale-95`}
+            >
+              <PlusCircle size={20} /> Add Another Link
             </button>
           </div>
-          <div className="flex flex-col gap-3">
-            <div className="step1 text-xl font-semibold text-start text-neutral-100">
-              Step 3 : Add Picture and Description then Finalize
-            </div>
+
+          {/* Step 3: Picture + Description + Theme */}
+          <div className="flex flex-col gap-3 bg-white/10 p-5 rounded-2xl border border-white/20 backdrop-blur-lg">
+            <h2
+              className="text-xl font-semibold"
+              style={{ color: currentTheme.accent }}
+            >
+              Step 3: Add Picture, Description & Theme
+            </h2>
+
             <input
               value={pic}
-              onChange={(e) => {
-                setpic(e.target.value);
-              }}
+              onChange={(e) => setPic(e.target.value)}
               type="text"
-              className="bg-neutral-100 py-3 w-full text-neutral-800 rounded-2xl px-3"
-              placeholder="Enter a Link to your picture"
+              placeholder="Paste your profile picture URL"
+              className="bg-white/90 text-gray-900 py-3 px-4 rounded-xl font-medium focus:ring-4 focus:ring-[#D2E823]/50 outline-none"
             />
+
             <input
               value={des}
-              onChange={(e) => {
-                setdes(e.target.value);
-              }}
+              onChange={(e) => setDes(e.target.value)}
               type="text"
-              className="bg-neutral-100 py-3 w-full text-neutral-800 rounded-2xl px-3"
-              placeholder="Enter a Description of linktree"
+              placeholder="Write a short description"
+              className="bg-white/90 text-gray-900 py-3 px-4 rounded-xl font-medium focus:ring-4 focus:ring-[#D2E823]/50 outline-none"
             />
+
+            <div className="flex flex-wrap gap-3 mt-3">
+              {Object.keys(themes).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTheme(t)}
+                  className={`px-4 py-2 rounded-xl font-semibold border-2 ${
+                    theme === t
+                      ? "border-[#D2E823] bg-white/20"
+                      : "border-transparent bg-white/5 hover:bg-white/10"
+                  } transition-all`}
+                >
+                  {t.charAt(0).toUpperCase() + t.slice(1)}
+                </button>
+              ))}
+            </div>
           </div>
 
+          {/* Submit button */}
           <button
-            onClick={submitlinks}
-            type="submit"
+            onClick={submitLinks}
             disabled={loading}
-            className={`w-full py-3 px-1 font-bold rounded-2xl transition-all active:scale-[0.96] ${
+            className={`w-full py-3 rounded-xl font-bold transition-all ${
               loading
-                ? "bg-white text-[#ff6c03] cursor-not-allowed"
-                : "bg-[#ff6c03] text-white hover:bg-white hover:text-[#ff6c03] active:bg-white active:text-[#ff6c03]"
+                ? "bg-white text-[#1a2a6c] cursor-not-allowed"
+                : `${currentTheme.button} active:scale-95`
             }`}
           >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <svg
-                  className="animate-spin h-5 w-5 text-[#ff6c03]"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                  ></path>
-                </svg>
-                Creating...
-              </span>
-            ) : (
-              "Create your Linktree"
-            )}
+            {loading ? "Creating..." : "Create Your LinkHub"}
           </button>
         </div>
-      </div>
-      <div className="h-full w-[45%] relative overflow-hidden bg-[url(/loginpic.webp)] bg-cover  bg-center"></div>
+      </motion.div>
+      {/* RIGHT — Live Preview Section */}
+      <motion.div
+        initial={{ opacity: 0, x: 30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.6 }}
+        className={`hidden md:flex w-[40%] flex-col items-center justify-center bg-gradient-to-b ${currentTheme.bg} px-6 py-12`}
+      >
+        {/* Live Preview Heading */}
+        <motion.h2
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-3xl font-extrabold mb-8 tracking-wide"
+          style={{ color: currentTheme.accent }}
+        >
+          Live Preview
+        </motion.h2>
+
+        {/* Preview Card */}
+        <motion.div
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="w-full max-w-sm bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-8 flex flex-col items-center text-center gap-6"
+        >
+          {/* Profile Image */}
+          <div className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-[#D2E823]">
+            {validPic && !imgError ? (
+              <Image
+                src={validPic}
+                alt="preview"
+                fill
+                className="object-cover"
+                sizes="112px"
+              />
+            ) : (
+              <div className="bg-gray-700 w-full h-full flex items-center justify-center text-gray-400 text-sm">
+                No Image
+              </div>
+            )}
+          </div>
+
+          {/* Handle & Description */}
+          <div>
+            <h2 className="text-2xl font-bold text-[#D2E823]">
+              @{handle || "yourname"}
+            </h2>
+            {des && <p className="text-gray-300 text-sm mt-2">{des}</p>}
+          </div>
+
+          {/* Links Preview */}
+          <div className="w-full flex flex-col gap-3">
+            {links.map((link, index) => (
+              <div
+                key={index}
+                className={`py-2 rounded-xl ${currentTheme.button} text-center transition-transform hover:scale-105`}
+              >
+                {link.linktext || "Link Title"}
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }
