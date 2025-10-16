@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import ArrowLeftbt from "../components/backarrowbt";
+import ProfileImage from "../components/portfolioimg";
+import { Eye } from "lucide-react"; // 👈 import Lucide icon
 
 export default function AllPages() {
   const [pages, setPages] = useState([]);
@@ -59,7 +61,7 @@ export default function AllPages() {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="🔍 Search by username or URL..."
+          placeholder="Search by username or URL..."
           className="w-full bg-white/90 text-gray-800 py-3 px-5 rounded-2xl border border-white/20 shadow-md focus:ring-4 focus:ring-[#D2E823]/50 focus:outline-none placeholder-gray-600"
         />
       </div>
@@ -80,24 +82,7 @@ export default function AllPages() {
                 className="bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-lg rounded-3xl shadow-md p-6 flex flex-col items-center text-center transition-all duration-300"
               >
                 {/* Avatar */}
-                <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-[#D2E823] mb-4">
-                  {page.pic ? (
-                    <Image
-                      src={page.pic}
-                      alt={`${page.handle}'s avatar`}
-                      fill
-                      sizes="96px"
-                      className="object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src = "/avatar-fallback.png";
-                      }}
-                    />
-                  ) : (
-                    <div className="bg-gray-800 w-full h-full flex items-center justify-center text-gray-400 text-xs">
-                      No Image
-                    </div>
-                  )}
-                </div>
+                <ProfileImage pic={page.pic} handle={page.handle} />
 
                 {/* Handle */}
                 <h2 className="text-2xl font-bold text-[#D2E823]">
@@ -121,6 +106,15 @@ export default function AllPages() {
                     ? new Date(page.createdAt).toLocaleDateString()
                     : "—"}
                 </p>
+
+                {/* ✨ Preview Button */}
+                <a
+                  href={`/preview/${page.handle}`} // 👈 adjust URL to your preview route
+                  className="mt-4 inline-flex items-center gap-2 bg-[#D2E823] text-black font-semibold px-4 py-2 rounded-full hover:bg-[#e7f36c] transition-all shadow-md hover:shadow-lg"
+                >
+                  <Eye size={18} />
+                  <span>View This Page</span>
+                </a>
               </div>
             ))
           ) : (

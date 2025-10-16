@@ -6,7 +6,7 @@ const SECRET = process.env.JWT_SECRET || "supersecretkey";
 export async function POST(request) {
   try {
     const client = await clientPromise;
-    const db = client.db("linktree");
+    const db = client.db("linkhub");
     const collection = db.collection("links");
 
     // ✅ 1. Extract and verify JWT

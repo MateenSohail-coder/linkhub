@@ -1,11 +1,35 @@
 "use client";
 import React from "react";
-
 import Image from "next/image";
+import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export default function AboutPage() {
+  // Framer Motion variants
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const fadeUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" },
+    },
+  };
+
+  const buttonHover = {
+    hover: { scale: 1.05 },
+    tap: { scale: 0.97 },
+  };
+
   return (
     <>
       <Navbar />
@@ -14,15 +38,28 @@ export default function AboutPage() {
         <div className="absolute top-10 left-10 w-96 h-96 bg-[#D2E823]/20 blur-3xl rounded-full animate-pulse"></div>
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#8a4fff]/20 blur-3xl rounded-full animate-pulse"></div>
 
-        <section className="relative z-10 max-w-6xl w-full flex flex-col md:flex-row items-center justify-between gap-12">
+        <motion.section
+          className="relative z-10 max-w-6xl w-full flex flex-col md:flex-row items-center justify-between gap-12"
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           {/* Left: text content */}
-          <div className="w-full md:w-[55%] flex flex-col gap-6">
-            <h1 className="text-5xl md:text-6xl font-extrabold text-[#D2E823]">
+          <motion.div
+            className="w-full md:w-[55%] flex flex-col gap-6"
+            variants={fadeUp}
+          >
+            <motion.h1
+              className="text-5xl md:text-6xl font-extrabold text-[#D2E823]"
+              variants={fadeUp}
+            >
               About Linkhub
-            </h1>
+            </motion.h1>
 
-            {/* Use a div wrapper instead of an outer <p> so we can have multiple <p> children */}
-            <div className="text-lg text-white/90 leading-relaxed space-y-4">
+            <motion.div
+              className="text-lg text-white/90 leading-relaxed space-y-4"
+              variants={fadeUp}
+            >
               <p className="text-lg md:text-xl">
                 Linkhub is your all-in-one bio link platform designed to help
                 you share everything that defines you — effortlessly. Whether
@@ -51,37 +88,52 @@ export default function AboutPage() {
                 Linkhub truly{" "}
                 <span className="font-semibold text-white">yours.</span>
               </p>
-            </div>
+            </motion.div>
 
-            <div className="flex gap-4 mt-6">
-              <a
+            <motion.div className="flex gap-4 mt-6" variants={fadeUp}>
+              <motion.a
                 href="/generate"
-                className="bg-[#D2E823] text-neutral-900 px-4 md:px-6 py-3 rounded-full font-bold hover:bg-[#c1da1f] transition-all active:scale-[0.97]"
+                className="bg-[#D2E823] text-neutral-900 px-4 md:px-6 py-3 rounded-full font-bold"
+                whileHover={buttonHover.hover}
+                whileTap={buttonHover.tap}
               >
                 Create Your Linkhub
-              </a>
-              <a
+              </motion.a>
+              <motion.a
                 href="/"
-                className="border border-white/40 text-white px-4 md:px-6 py-3 rounded-full font-bold hover:bg-white/10 transition-all active:scale-[0.97]"
+                className="border border-white/40 text-white px-4 md:px-6 py-3 rounded-full font-bold"
+                whileHover={buttonHover.hover}
+                whileTap={buttonHover.tap}
               >
                 Back to Home
-              </a>
-            </div>
-          </div>
+              </motion.a>
+            </motion.div>
+          </motion.div>
 
-          {/* Right: image or illustration */}
-          <div className="w-full md:w-[40%] relative flex items-center justify-center">
-            <div className="w-[80%] md:w-[70%] rounded-3xl overflow-hidden shadow-2xl border border-white/10 backdrop-blur-md">
+          {/* Right: image */}
+          <motion.div
+            className="w-full md:w-[40%] relative flex items-center justify-center"
+            variants={fadeUp}
+          >
+            <motion.div
+              className="w-[80%] md:w-[70%] rounded-3xl overflow-hidden shadow-2xl border border-white/10 backdrop-blur-md"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{
+                scale: 1,
+                opacity: 1,
+                transition: { duration: 0.8, ease: "easeOut" },
+              }}
+            >
               <Image
-                src="/hero.png"
+                src="/aboutpic.png"
                 alt="About Linkhub Illustration"
-                width={500}
-                height={500}
+                width={700}
+                height={600}
                 className="object-cover"
               />
-            </div>
-          </div>
-        </section>
+            </motion.div>
+          </motion.div>
+        </motion.section>
       </main>
       <Footer />
     </>

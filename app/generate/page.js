@@ -135,20 +135,29 @@ export default function GeneratePage() {
 
       const result = await response.json();
       if (result.success) {
-        toast.success(
-          <div>
-            {result.message}
-            <br />
-            <a
-              href={result.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#D2E823] underline"
-            >
-              {result.link}
-            </a>
-          </div>
-        );
+       toast.success(
+         <div className="flex flex-col gap-1">
+           <span>{result.message}</span>
+           {result.link && (
+             <a
+               href={result.link}
+               target="_blank"
+               rel="noopener noreferrer"
+               className="text-[#D2E823] underline break-all"
+             >
+               {result.link}
+             </a>
+           )}
+         </div>,
+         {
+           position: "top-right",
+           autoClose: 5000,
+           hideProgressBar: true,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+         }
+       );
         setLinks([{ link: "", linktext: "" }]);
         setHandle("");
         setPic("");

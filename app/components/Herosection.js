@@ -1,18 +1,45 @@
 "use client";
 import Image from "next/image";
 import Navbar from "./Navbar.js";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation.js";
 import { motion } from "framer-motion";
 
 export default function Herosection() {
   const [text, setText] = useState("");
+  const [loading, setLoading] = useState(true); // loader state
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
+
+  // Check user login status on mount
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+    setLoading(false); // stop loader after check
+  }, []);
 
   const createTree = () => {
     if (!text.trim()) return;
-    router.push(`/generate?handle=${text}`);
+
+    if (isLoggedIn) {
+      router.push(`/generate?handle=${text}`);
+    } else {
+      router.push("/login");
+    }
   };
+
+  if (loading) {
+    // Fullscreen loader
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-[#1a2a6c] via-[#225ac0] to-[#8a4fff] z-50">
+        <motion.div
+          className="w-20 h-20 border-4 border-t-[#D2E823] border-white rounded-full"
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+        ></motion.div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -68,7 +95,7 @@ export default function Herosection() {
           >
             <div className="w-[70%] md:w-[60%] aspect-[3/4] rounded-3xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.35)] border border-white/20 bg-white/10 backdrop-blur-md relative">
               <Image
-                src="/linktree.png"
+                src="/heropic.png"
                 alt="Linkhub Preview"
                 fill
                 priority

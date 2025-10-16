@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
@@ -13,7 +14,7 @@ export default function ProfileImage({ pic, handle }) {
       return;
     }
 
-    const img = new window.Image(); // native Image
+    const img = new window.Image();
     img.src = pic;
     img.onload = () => {
       setValidPic(pic);
@@ -26,17 +27,24 @@ export default function ProfileImage({ pic, handle }) {
   }, [pic]);
 
   return (
-    <div className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-[#D2E823]">
+    <div
+      className="relative rounded-full overflow-hidden border-4 border-[#D2E823] 
+                    w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 xl:w-36 xl:h-36"
+    >
       {validPic && !imgError ? (
         <Image
           src={validPic}
           alt={`${handle || "user"}'s profile`}
           fill
           className="object-cover"
-          sizes="(max-width: 768px) 128px, 128px"
+          sizes="(max-width: 640px) 80px, 
+                 (max-width: 768px) 96px, 
+                 (max-width: 1024px) 112px, 
+                 (max-width: 1280px) 128px, 
+                 144px"
         />
       ) : (
-        <div className="bg-gray-800 w-full h-full flex items-center justify-center text-gray-500 text-sm">
+        <div className="bg-gray-800 w-full h-full flex items-center justify-center text-gray-500 text-sm sm:text-base">
           No Image
         </div>
       )}

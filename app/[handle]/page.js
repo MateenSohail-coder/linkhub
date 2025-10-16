@@ -1,28 +1,17 @@
 import clientPromise from "@/lib/mongodb";
 import ProfileImage from "../components/portfolioimg";
+import NotFound from "../not-found";
 
 export default async function Page({ params }) {
   const { handle } = await params;
 
   const client = await clientPromise;
-  const db = client.db("linktree");
+  const db = client.db("linkhub");
   const collection = db.collection("links");
   const item = await collection.findOne({ handle });
 
   if (!item) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-950 text-white px-6">
-        <div className="max-w-md w-full bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/20 text-center">
-          <h1 className="text-3xl font-bold mb-3 text-[#D2E823]">
-            User Not Found
-          </h1>
-          <p className="text-gray-300">
-            We couldn’t find a profile for{" "}
-            <span className="font-semibold text-white">@{handle}</span>.
-          </p>
-        </div>
-      </div>
-    );
+    return <NotFound handle={handle} />;
   }
 
   // 🎨 Dynamic theme based on user's choice

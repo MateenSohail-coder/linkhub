@@ -12,7 +12,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-
   async function handleLogin() {
     if (!email || !password) {
       toast.error("Please fill all fields!");
@@ -26,17 +25,25 @@ export default function Login() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-      const data = await res.json();
 
-      if (data.success) {
+      let data;
+      try {
+        data = await res.json(); // Attempt to parse JSON
+      } catch (err) {
+        console.error("Failed to parse JSON response:", err);
+        data = null; // Fallback if response is empty or invalid
+      }
+
+      if (res.ok && data?.success) {
         localStorage.setItem("token", data.token);
         toast.success("Login successful! Redirecting...");
         setTimeout(() => router.push("/dashboard"), 1500);
       } else {
-        toast.error(data.message || "Invalid credentials!");
+        const errorMessage = data?.message || "Invalid credentials!";
+        toast.error(errorMessage);
       }
     } catch (err) {
-      console.error(err);
+      console.error("Server error:", err);
       toast.error("Server error. Please try again later.");
     } finally {
       setLoading(false);
@@ -107,7 +114,7 @@ export default function Login() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="hidden md:block w-[45%] relative bg-[url(/loginpic.webp)] bg-cover bg-center brightness-[0.85]"
+        className="hidden md:block w-[45%] relative bg-[url(/poster2.png)] bg-cover bg-center brightness-[0.85]"
       >
         <div className="absolute inset-0 bg-gradient-to-t from-[#1a2a6c]/80 to-transparent"></div>
       </motion.div>
