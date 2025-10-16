@@ -1,5 +1,5 @@
 import { OctagonAlert, ArrowBigLeft } from "lucide-react";
-
+import Link from "next/link";
 export default function NotFound({ handle }) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-950 text-white px-6">
@@ -23,13 +23,13 @@ export default function NotFound({ handle }) {
           )}
         </p>
 
-        <a
+        <Link
           href="/"
           className="flex items-center justify-center gap-2 mt-6 px-5 py-2 bg-[#D2E823] text-black font-semibold rounded-full hover:bg-[#e6f867] transition-all"
         >
           <ArrowBigLeft />
           <p>Go back home</p>
-        </a>
+        </Link>
       </div>
     </div>
   );

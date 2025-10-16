@@ -1,7 +1,7 @@
 import clientPromise from "@/lib/mongodb";
 import ProfileImage from "../components/portfolioimg";
 import NotFound from "../not-found";
-
+import Link from "next/link";
 export default async function Page({ params }) {
   const { handle } = await params;
 
@@ -71,7 +71,7 @@ export default async function Page({ params }) {
         {/* Links */}
         <div className="w-full flex flex-col gap-4">
           {item.links?.map((link, index) => (
-            <a
+            <Link
               key={index}
               href={link.link}
               target="_blank"
@@ -79,16 +79,19 @@ export default async function Page({ params }) {
               className={`w-full py-3 px-4 ${theme.button} font-bold rounded-xl transition-all active:scale-95 shadow-md hover:shadow-lg`}
             >
               {link.linktext}
-            </a>
+            </Link>
           ))}
         </div>
 
         {/* Footer */}
         <div className="text-gray-400 text-xs mt-6">
           Powered by{" "}
-          <a href="/" className="text-[#D2E823] font-semibold hover:underline">
+          <Link
+            href="/"
+            className="text-[#D2E823] font-semibold hover:underline"
+          >
             LinkHub
-          </a>
+          </Link>
         </div>
       </div>
     </div>
