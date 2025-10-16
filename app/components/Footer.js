@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { Twitter, Github, Instagram } from "lucide-react";
+import Fiverr from "./fiverrlogo";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -24,9 +25,19 @@ export default function Footer() {
   ];
 
   const socialLinks = [
-    { icon: <Twitter size={20} />, href: "https://twitter.com" },
-    { icon: <Instagram size={20} />, href: "https://instagram.com" },
-    { icon: <Github size={20} />, href: "https://github.com" },
+    { icon: <Twitter size={20} />, href: "https://x.com/AbDuL_MaTeEn77" },
+    {
+      icon: <Instagram size={20} />,
+      href: "https://www.instagram.com/lege.nd87747/",
+    },
+    {
+      icon: <Github size={20} />,
+      href: "https://github.com/MateenSohail-coder/linkhub.git",
+    },
+    {
+      icon: <Fiverr className="w-7 h-7" />,
+      href: "https://www.fiverr.com/s/Eg1voQD",
+    },
   ];
 
   return (

@@ -1,15 +1,16 @@
 "use client";
 
+import { Suspense, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-import { Trash2, PlusCircle } from "lucide-react";
+import { Trash2, PlusCircle, ArrowBigLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowBigLeft } from "lucide-react";
-export default function GeneratePage() {
+
+// ✅ Separate component wrapped by Suspense
+function GenerateInner() {
   const searchparams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [links, setLinks] = useState([{ link: "", linktext: "" }]);
@@ -18,11 +19,10 @@ export default function GeneratePage() {
   const [pic, setPic] = useState("");
   const [des, setDes] = useState("");
   const [theme, setTheme] = useState("blue");
-  const [router, setRouter] = useState("");
   const [imgError, setImgError] = useState(false);
   const [validPic, setValidPic] = useState(pic);
 
-  // ✅ Check if pic URL is valid
+  // ✅ Validate image URL
   useEffect(() => {
     if (!pic) {
       setValidPic(null);
@@ -30,7 +30,7 @@ export default function GeneratePage() {
       return;
     }
 
-    const img = new window.Image(); // ← use window.Image here
+    const img = new window.Image();
     img.src = pic;
     img.onload = () => {
       setValidPic(pic);
@@ -64,9 +64,9 @@ export default function GeneratePage() {
       button: "bg-[#D2E823] text-[#7c2d12] hover:bg-white hover:text-[#f97316]",
     },
     blackGreen: {
-      bg: "from-[#000000] via-[#064e3b] to-[#059669]", // black to green gradient
-      accent: "#D2E823", // yellow accent
-      button: "bg-[#D2E823] text-[#000000] hover:bg-white hover:text-[#059669]", // button style
+      bg: "from-[#000000] via-[#064e3b] to-[#059669]",
+      accent: "#D2E823",
+      button: "bg-[#D2E823] text-[#000000] hover:bg-white hover:text-[#059669]",
     },
   };
 
@@ -85,9 +85,7 @@ export default function GeneratePage() {
 
   const handleHandleChange = (value) => {
     if (/\s/.test(value)) {
-      setHandleError(
-        "Handle cannot contain spaces! you can use' _ 'or' - 'instead."
-      );
+      setHandleError("Handle cannot contain spaces! Use '_' or '-' instead.");
     } else {
       setHandleError("");
     }
@@ -135,29 +133,21 @@ export default function GeneratePage() {
 
       const result = await response.json();
       if (result.success) {
-       toast.success(
-         <div className="flex flex-col gap-1">
-           <span>{result.message}</span>
-           {result.link && (
-             <a
-               href={result.link}
-               target="_blank"
-               rel="noopener noreferrer"
-               className="text-[#D2E823] underline break-all"
-             >
-               {result.link}
-             </a>
-           )}
-         </div>,
-         {
-           position: "top-right",
-           autoClose: 5000,
-           hideProgressBar: true,
-           closeOnClick: true,
-           pauseOnHover: true,
-           draggable: true,
-         }
-       );
+        toast.success(
+          <div className="flex flex-col gap-1">
+            <span>{result.message}</span>
+            {result.link && (
+              <a
+                href={result.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[#D2E823] underline break-all"
+              >
+                {result.link}
+              </a>
+            )}
+          </div>
+        );
         setLinks([{ link: "", linktext: "" }]);
         setHandle("");
         setPic("");
@@ -167,15 +157,19 @@ export default function GeneratePage() {
         toast.error(
           <div>
             {result.message}
-            <br />
-            <a
-              href={result.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#ff6c03] underline"
-            >
-              {result.link}
-            </a>
+            {result.link && (
+              <>
+                <br />
+                <a
+                  href={result.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#ff6c03] underline"
+                >
+                  {result.link}
+                </a>
+              </>
+            )}
           </div>
         );
       }
@@ -192,13 +186,16 @@ export default function GeneratePage() {
       className={`min-h-screen w-full flex flex-col md:flex-row bg-gradient-to-br ${currentTheme.bg} text-white`}
     >
       <ToastContainer />
-      {/* LEFT — Form Section */}
+
+      {/* Back Button */}
       <Link
         href="/dashboard"
-        className=" cursor-pointer absolute top-6 left-6 text-white/80 hover:text-white transition border border-white/20 px-3 py-2 rounded-full bg-white/10 hover:bg-white/20 flex items-center gap-2"
+        className="absolute top-6 left-6 text-white/80 hover:text-white transition border border-white/20 px-3 py-2 rounded-full bg-white/10 hover:bg-white/20 flex items-center gap-2"
       >
         <ArrowBigLeft />
       </Link>
+
+      {/* LEFT SECTION */}
       <motion.div
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
@@ -211,8 +208,9 @@ export default function GeneratePage() {
         >
           Create Your LinkHub
         </h1>
+
         <div className="flex flex-col gap-8 w-full max-w-2xl">
-          {/* Step 1: Handle */}
+          {/* Step 1 — Handle */}
           <div className="flex flex-col gap-1 bg-white/10 p-5 rounded-2xl border border-white/20 backdrop-blur-lg">
             <h2
               className="text-xl font-semibold"
@@ -234,7 +232,7 @@ export default function GeneratePage() {
             )}
           </div>
 
-          {/* Step 2: Add Links */}
+          {/* Step 2 — Add Links */}
           <div className="flex flex-col gap-4 bg-white/10 p-5 rounded-2xl border border-white/20 backdrop-blur-lg">
             <h2
               className="text-xl font-semibold"
@@ -283,7 +281,7 @@ export default function GeneratePage() {
             </button>
           </div>
 
-          {/* Step 3: Picture + Description + Theme */}
+          {/* Step 3 — Picture, Description & Theme */}
           <div className="flex flex-col gap-3 bg-white/10 p-5 rounded-2xl border border-white/20 backdrop-blur-lg">
             <h2
               className="text-xl font-semibold"
@@ -325,7 +323,7 @@ export default function GeneratePage() {
             </div>
           </div>
 
-          {/* Submit button */}
+          {/* Submit */}
           <button
             onClick={submitLinks}
             disabled={loading}
@@ -339,14 +337,14 @@ export default function GeneratePage() {
           </button>
         </div>
       </motion.div>
-      {/* RIGHT — Live Preview Section */}
+
+      {/* RIGHT — Live Preview */}
       <motion.div
         initial={{ opacity: 0, x: 30 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6 }}
         className={`hidden md:flex w-[40%] flex-col items-center justify-center bg-gradient-to-b ${currentTheme.bg} px-6 py-12`}
       >
-        {/* Live Preview Heading */}
         <motion.h2
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -357,7 +355,6 @@ export default function GeneratePage() {
           Live Preview
         </motion.h2>
 
-        {/* Preview Card */}
         <motion.div
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -381,7 +378,6 @@ export default function GeneratePage() {
             )}
           </div>
 
-          {/* Handle & Description */}
           <div>
             <h2 className="text-2xl font-bold text-[#D2E823]">
               @{handle || "yourname"}
@@ -389,7 +385,6 @@ export default function GeneratePage() {
             {des && <p className="text-gray-300 text-sm mt-2">{des}</p>}
           </div>
 
-          {/* Links Preview */}
           <div className="w-full flex flex-col gap-3">
             {links.map((link, index) => (
               <div
@@ -403,5 +398,16 @@ export default function GeneratePage() {
         </motion.div>
       </motion.div>
     </section>
+  );
+}
+
+// ✅ Export wrapped with Suspense
+export default function GeneratePage() {
+  return (
+    <Suspense
+      fallback={<div className="text-center p-10 text-white">Loading...</div>}
+    >
+      <GenerateInner />
+    </Suspense>
   );
 }
