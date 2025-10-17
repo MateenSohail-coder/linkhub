@@ -528,70 +528,98 @@ export default function Dashboard() {
       <AnimatePresence>
         {showConfirm && (
           <motion.div
+            key="backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
           >
             <motion.div
+              key="modal"
               initial={{ scale: 0.9, opacity: 0, y: 30 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 30 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl border border-gray-100"
+              className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl border border-gray-100 relative"
             >
-              {!modalMessage ? (
-                <>
-                  <h3 className="text-xl font-bold mb-4 text-gray-900">
-                    Confirm Delete
-                  </h3>
-                  <p className="mb-6 text-gray-600">
-                    Are you sure you want to delete this page? This action
-                    cannot be undone.
-                  </p>
+              {/* Close button */}
+              <button
+                onClick={() => {
+                  setModalMessage("");
+                  setShowConfirm(false);
+                }}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
+              >
+                ✕
+              </button>
 
-                  <div className="flex justify-center gap-4">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={handleConfirmDelete}
-                      className="px-5 py-2.5 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-full font-semibold shadow-md hover:shadow-lg transition-all"
-                    >
-                      Delete
-                    </motion.button>
-
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setShowConfirm(false)}
-                      className="px-5 py-2.5 bg-gray-200 text-gray-800 rounded-full font-semibold shadow-md hover:bg-gray-300 transition-all"
-                    >
-                      Cancel
-                    </motion.button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <p className="text-center mb-5 font-semibold text-gray-800">
-                    {modalMessage}
-                  </p>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => {
-                      setModalMessage("");
-                      setShowConfirm(false);
-                    }}
-                    className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full font-semibold shadow-md hover:shadow-lg transition-all"
+              <AnimatePresence mode="wait">
+                {!modalMessage ? (
+                  <motion.div
+                    key="confirm"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.25 }}
                   >
-                    Close
-                  </motion.button>
-                </>
-              )}
+                    <h3 className="text-xl font-bold mb-4 text-gray-900">
+                      Confirm Delete
+                    </h3>
+                    <p className="mb-6 text-gray-600">
+                      Are you sure you want to delete this page? This action
+                      cannot be undone.
+                    </p>
+
+                    <div className="flex justify-center gap-4">
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleConfirmDelete}
+                        className="px-5 py-2.5 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-full font-semibold shadow-md hover:shadow-lg transition-all"
+                      >
+                        Delete
+                      </motion.button>
+
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setShowConfirm(false)}
+                        className="px-5 py-2.5 bg-gray-200 text-gray-800 rounded-full font-semibold shadow-md hover:bg-gray-300 transition-all"
+                      >
+                        Cancel
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="message"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <p className="text-center mb-5 font-semibold text-gray-800">
+                      {modalMessage}
+                    </p>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => {
+                        setModalMessage("");
+                        setShowConfirm(false);
+                      }}
+                      className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full font-semibold shadow-md hover:shadow-lg transition-all"
+                    >
+                      Close
+                    </motion.button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
       {message && (
         <div
           style={{
