@@ -10,6 +10,7 @@ import { LaptopMinimalCheck } from "lucide-react";
 import { PencilIcon } from "lucide-react";
 import { Trash2Icon } from "lucide-react";
 import { ClipboardCopy, Check } from "lucide-react";
+import { ClipboardCheck } from "lucide-react";
 
 export default function Dashboard() {
   const [pages, setPages] = useState([]);
@@ -23,17 +24,18 @@ export default function Dashboard() {
   const [modalMessage, setModalMessage] = useState("");
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState(""); // "success" or "error"
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState(null);
 
-  const copyToClipboard = async (text) => {
+  const copyToClipboard = async (text, index) => {
     try {
       await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1000); // revert after 1s
+      setCopied(index); // only this one is copied
+      setTimeout(() => setCopied(null), 1000); // reset after 1 second
     } catch (err) {
       console.error("Failed to copy:", err);
     }
   };
+
   function formatDateTime(isoString) {
     const date = new Date(isoString);
 
@@ -414,23 +416,17 @@ export default function Dashboard() {
                         @{p.handle || username}
                       </p>
                       <p className="text-sm flex items-center gap-2  w-full text-[#D2E823]/80">
-                        <p className="underline">{p.link}</p>
+                        <a href={p.link} target="_blank" className="underline">
+                          {p.link}
+                        </a>
                         <button
-                          onClick={copyToClipboard}
-                          className="cursor-pointer p-2 rounded-full bg-gray-100 transition"
-                          aria-label="Copy to clipboard"
+                          className="cursor-pointer"
+                          onClick={() => copyToClipboard(p.link, i)}
                         >
-                          {copied ? (
-                            <div className="flex gap-2 items-center">
-                              {" "}
-                              <Check className="text-green-500 w-5 h-5" />
-                              <p className="text-green-700 font-bold flex items-center gap-1">
-                                Copy{" "}
-                                <p className="hidden md:block">To Clipboard!</p>
-                              </p>
-                            </div>
+                          {copied === i ? (
+                            <ClipboardCheck className="text-green-500 transition-transform duration-200 scale-110" />
                           ) : (
-                            <ClipboardCopy className="text-blue-700 w-5 h-5" />
+                            <ClipboardCopy className="text-gray-200" />
                           )}
                         </button>
                       </p>
@@ -503,69 +499,51 @@ export default function Dashboard() {
         )}
       </div>
       <Footer />
-      {showConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm w-full text-center shadow-lg">
-            <h3 className="text-lg font-bold mb-4">Confirm Delete</h3>
-            <p className="mb-6">Are you sure you want to delete this page?</p>
-            <div className="flex justify-center gap-4">
-              <button
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                onClick={handleConfirmDelete}
-              >
-                Delete
-              </button>
-              <button
-                className="px-4 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 transition"
-                onClick={() => setShowConfirm(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
       <AnimatePresence>
         {showConfirm && (
           <motion.div
-            key="backdrop"
+            key="confirm-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
           >
             <motion.div
-              key="modal"
-              initial={{ scale: 0.9, opacity: 0, y: 30 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 30 }}
+              key="confirm-box"
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl border border-gray-100 relative"
+              className="relative bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl border border-gray-100"
             >
-              {/* Close button */}
+              {/* Close Button */}
               <button
                 onClick={() => {
                   setModalMessage("");
                   setShowConfirm(false);
                 }}
-                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
+                className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition"
+                aria-label="Close"
               >
                 ✕
               </button>
 
+              {/* Animate only the inner content */}
               <AnimatePresence mode="wait">
                 {!modalMessage ? (
                   <motion.div
-                    key="confirm"
+                    key="confirm-content"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.25 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    <h3 className="text-xl font-bold mb-4 text-gray-900">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
                       Confirm Delete
                     </h3>
-                    <p className="mb-6 text-gray-600">
+                    <p className="text-gray-600 mb-6">
                       Are you sure you want to delete this page? This action
                       cannot be undone.
                     </p>
@@ -592,15 +570,15 @@ export default function Dashboard() {
                   </motion.div>
                 ) : (
                   <motion.div
-                    key="message"
+                    key="message-content"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.25 }}
+                    transition={{ duration: 0.2 }}
                   >
-                    <p className="text-center mb-5 font-semibold text-gray-800">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">
                       {modalMessage}
-                    </p>
+                    </h3>
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}

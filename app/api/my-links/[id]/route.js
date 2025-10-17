@@ -17,7 +17,7 @@ async function verifyUser(request) {
 }
 
 export async function GET(request, { params }) {
-  const id = params.id;
+  const id = await params.id;
   try {
     const user = await verifyUser(request);
     const client = await clientPromise;
@@ -132,7 +132,8 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, context) {
   try {
     const { params } = await context; // ✅ await context for params
-    const id = await params.id; // ✅ extract id correctly
+    const param = await params;
+    const id = await param.id; // ✅ extract id correctly
 
     const user = await verifyUser(request);
     const client = await clientPromise;
