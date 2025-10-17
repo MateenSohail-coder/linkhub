@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ArrowLeftbt from "../components/backarrowbt";
 import Link from "next/link";
+import InteractiveLoader from "../components/intractiveloader";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -53,6 +54,7 @@ export default function Login() {
 
   return (
     <section className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-[#1a2a6c] via-[#225ac0] to-[#8a4fff] text-white">
+      {loading && <InteractiveLoader />}
       <ToastContainer />
       <div className="absolute w-100 px-4 py-4">
         <ArrowLeftbt />

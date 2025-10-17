@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 
-const InteractiveLoader = ({ size = 100, color = "#caff57" }) => {
+const InteractiveLoader = ({ size = 70, color = "#caff57" }) => {
   const loaderRef = useRef(null);
   const [rotation, setRotation] = useState(0);
   const [isDragging, setIsDragging] = useState(false);

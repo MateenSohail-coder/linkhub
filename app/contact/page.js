@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
 import emailjs from "@emailjs/browser";
+import InteractiveLoader from "../components/intractiveloader";
 
 export default function ContactPage() {
   const [name, setName] = useState("");
@@ -57,6 +58,7 @@ export default function ContactPage() {
 
   return (
     <>
+      {loading && <InteractiveLoader />}
       <Navbar />
       <ToastContainer />
       <section className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-[#1a2a6c] via-[#225ac0] to-[#8a4fff] text-white relative overflow-hidden">
