@@ -125,16 +125,14 @@ export default function AllPages() {
                   </p>
 
                   {/* ✨ Preview Button */}
-                  <Link href={`/${page.handle}`} passHref>
-                    <a
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-4 inline-flex items-center gap-2 bg-[#D2E823] text-black font-semibold px-4 py-2 rounded-full hover:bg-[#e7f36c] transition-all shadow-md hover:shadow-lg"
-                    >
-                      <Eye size={18} />
-                      <span>View This Page</span>
-                    </a>
-                  </Link>
+                  <a
+                    href={`/${page.handle}`}
+                    target="_blank"
+                    className="mt-4 inline-flex items-center gap-2 bg-[#D2E823] text-black font-semibold px-4 py-2 rounded-full hover:bg-[#e7f36c] transition-all shadow-md hover:shadow-lg"
+                  >
+                    <Eye size={18} />
+                    <span>View This Page</span>
+                  </a>
                 </div>
               ))
             ) : (
