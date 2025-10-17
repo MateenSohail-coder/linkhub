@@ -58,8 +58,9 @@ export default function ContactPage() {
 
   return (
     <>
-      {loading && <InteractiveLoader />}
       <Navbar />
+      {loading && <InteractiveLoader />}
+
       <ToastContainer />
       <section className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-[#1a2a6c] via-[#225ac0] to-[#8a4fff] text-white relative overflow-hidden">
         {/* Decorative Glow Blobs */}
@@ -71,7 +72,7 @@ export default function ContactPage() {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6 }}
-          className="w-full md:w-[55%] flex flex-col justify-center items-center px-8 md:px-16 py-20"
+          className="w-full md:w-[55%] flex flex-col justify-center items-center px-8 md:px-16 py-28 pt-30"
         >
           <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-[#D2E823] drop-shadow-[0_0_12px_rgba(210,232,35,0.6)]">
             Contact Us

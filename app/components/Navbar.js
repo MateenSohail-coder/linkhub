@@ -146,8 +146,10 @@ export default function Navbar() {
               {link.name}
             </Link>
           ))}
-          <AuthButtons />
         </div>
+
+        {/* Auth Buttons - Always Visible */}
+        <AuthButtons />
 
         {/* Mobile Hamburger */}
         <div className="flex items-center gap-2 md:hidden">
@@ -165,44 +167,45 @@ export default function Navbar() {
             )}
           </button>
         </div>
-
-        {/* Mobile Drawer */}
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ x: "100%", opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: "100%", opacity: 0 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-              className="fixed inset-0 z-40 bg-[#1a2a6c]/95 backdrop-blur-lg flex flex-col items-center justify-center"
-            >
-              <button
-                onClick={() => setIsOpen(false)}
-                className="absolute top-6 right-6 p-2 rounded-full bg-white/20 hover:bg-white/40 transition"
-              >
-                <X className="w-6 h-6 text-white" />
-              </button>
-              <ul className="flex flex-col gap-6 text-xl font-semibold text-center">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.path}
-                    href={link.path}
-                    onClick={() => setIsOpen(false)}
-                    className={`py-3 px-6 rounded-lg transition-colors ${
-                      pathname === link.path
-                        ? "bg-[#D2E823] text-neutral-900 shadow-md"
-                        : "text-white/80 hover:text-[#D2E823] hover:bg-white/10"
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-                <AuthButtons isMobile />
-              </ul>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </nav>
+      {/* Mobile Drawer */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ x: "100%", opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: "100%", opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeInOut" }}
+            className="fixed inset-0 z-50 backdrop-blur-md flex bg-white flex-col items-center"
+          >
+            {/* Close button */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="absolute top-6 right-6 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition"
+            >
+              <X className="w-6 h-6 text-gray-900" />
+            </button>
+
+            {/* Links */}
+            <ul className="flex flex-col gap-6 w-full px-8 mt-24 text-center">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  href={link.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`block py-4 px-6 rounded-lg text-xl font-semibold transition-colors border-b-2 border-b-[#D2E823] ${
+                    pathname === link.path
+                      ? "bg-[#D2E823] text-neutral-900 shadow-md"
+                      : "bg-white text-[#D2E823]"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }

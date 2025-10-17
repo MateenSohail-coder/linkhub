@@ -55,10 +55,10 @@ export default function AllPages() {
     <>
       <section className="min-h-screen bg-gradient-to-b from-[#1e3a8a] via-[#1e40af] to-[#1d4ed8] py-12 px-6 md:px-10 text-white">
         <div className="flex gap-3">
-          <ArrowLeftbt />
+          <ArrowLeftbt hidden={false} text="Home" />
           {/* ✅ Show only when logged in */}
           {isLoggedIn && (
-            <ArrowLeftbt text="Back to Dashboard" href="/dashboard" />
+            <ArrowLeftbt text="Dashboard" hidden={false} href="/dashboard" />
           )}
         </div>
 
