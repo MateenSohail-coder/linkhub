@@ -44,70 +44,6 @@ export default function Navbar() {
     },
   };
 
-  // Auth Buttons component
-  const AuthButtons = ({ isMobile = false }) => {
-    if (!authChecked) return null;
-
-    // Dashboard page: show only Logout
-    if (pathname === "/dashboard" && isLoggedIn) {
-      return (
-        <div
-          className={
-            isMobile ? "flex flex-col gap-3" : "flex items-center gap-4"
-          }
-        >
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-1 px-5 py-2 bg-red-500 text-white rounded-full shadow hover:bg-red-600 transition"
-          >
-            <LogOut size={18} /> Logout
-          </button>
-        </div>
-      );
-    }
-
-    // Logged in: Dashboard + Logout
-    if (isLoggedIn) {
-      return (
-        <div
-          className={
-            isMobile ? "flex flex-col gap-3" : "flex items-center gap-4"
-          }
-        >
-          <Link href="/dashboard">
-            <button className="px-5 py-2 cursor-pointer bg-[#D2E823] text-neutral-900 font-semibold rounded-full shadow-lg hover:bg-[#c1da1f] transition-all duration-200">
-              Dashboard
-            </button>
-          </Link>
-          <button
-            onClick={handleLogout}
-            className="flex items-center cursor-pointer gap-1 text-red-500 font-semibold hover:text-red-600 transition-colors"
-          >
-            <LogOut size={18} /> Logout
-          </button>
-        </div>
-      );
-    }
-
-    // Not logged in: Login + Register
-    return (
-      <div
-        className={isMobile ? "flex flex-col gap-3" : "flex items-center gap-4"}
-      >
-        <Link href="/login">
-          <button className="px-5 py-2 cursor-pointer rounded-full font-semibold text-white bg-[#225ac0]/80 hover:bg-[#225ac0]/60 transition">
-            Login
-          </button>
-        </Link>
-        <Link href="/register">
-          <button className="px-5 py-2 cursor-pointer bg-[#D2E823] text-neutral-900 font-semibold rounded-full shadow-lg hover:bg-[#c1da1f] transition-all duration-200">
-            Get Started
-          </button>
-        </Link>
-      </div>
-    );
-  };
-
   return (
     <motion.div
       variants={navbarVariants}
@@ -148,17 +84,31 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Auth Buttons - Always Visible */}
-        <AuthButtons />
+        {/* Get Started / Dashboard Always on Navbar */}
+        <div className="flex items-center gap-3">
+          {authChecked && (
+            <>
+              {isLoggedIn ? (
+                <Link href="/dashboard">
+                  <button className="px-5 py-2 bg-[#D2E823] text-neutral-900 font-semibold rounded-full shadow-lg hover:bg-[#c1da1f] transition-all duration-200">
+                    Dashboard
+                  </button>
+                </Link>
+              ) : (
+                <Link href="/register">
+                  <button className="px-5 py-2 bg-[#D2E823] text-neutral-900 font-semibold rounded-full shadow-lg hover:bg-[#c1da1f] transition-all duration-200">
+                    Get Started
+                  </button>
+                </Link>
+              )}
+            </>
+          )}
 
-        {/* Mobile Hamburger */}
-        <div className="flex items-center gap-2 md:hidden">
+          {/* Mobile Hamburger */}
           <button
             onClick={toggleMenu}
             aria-label="Toggle menu"
-            className={`p-2 rounded-full transition-colors ${
-              isOpen ? "bg-white/20" : "bg-white/10"
-            }`}
+            className="p-2 rounded-full transition-colors md:hidden bg-white/10 hover:bg-white/20"
           >
             {isOpen ? (
               <X className="w-6 h-6 text-white" />
@@ -168,6 +118,7 @@ export default function Navbar() {
           </button>
         </div>
       </nav>
+
       {/* Mobile Drawer */}
       <AnimatePresence>
         {isOpen && (
@@ -193,16 +144,36 @@ export default function Navbar() {
                   key={link.path}
                   href={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`block py-4 px-6 rounded-lg text-xl font-semibold transition-colors border-b-2 border-b-[#D2E823] ${
+                  className={`block py-4 px-6 rounded-lg text-xl font-semibold transition-colors border-t-2 border-b-2 border-b-[#D2E823] border-t-[#D2E823] ${
                     pathname === link.path
                       ? "bg-[#D2E823] text-neutral-900 shadow-md"
-                      : "bg-white text-[#D2E823]"
+                      : "bg-white text-[#1a2a6c] hover:bg-[#f5f5f5]"
                   }`}
                 >
                   {link.name}
                 </Link>
               ))}
             </ul>
+
+            {/* Auth Buttons (Login / Logout only) */}
+            {authChecked && (
+              <div className="flex flex-col gap-3 mt-6 w-full items-center">
+                {isLoggedIn ? (
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center w-70 justify-center gap-1 px-5 py-2 bg-red-500 text-white rounded-full shadow hover:bg-red-600 transition"
+                  >
+                    <LogOut size={18} /> Logout
+                  </button>
+                ) : (
+                  <Link href="/login" onClick={() => setIsOpen(false)}>
+                    <button className="px-5 py-2 w-70 cursor-pointer rounded-full font-semibold text-white bg-[#225ac0]/80 hover:bg-[#225ac0]/60 transition">
+                      Login
+                    </button>
+                  </Link>
+                )}
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

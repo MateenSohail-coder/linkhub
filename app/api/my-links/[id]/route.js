@@ -129,9 +129,11 @@ export async function PUT(request, { params }) {
   }
 }
 
-export async function DELETE(request, { params }) {
+export async function DELETE(request, context) {
   try {
-    const { id } = params.id; // safer destructuring
+    const { params } = await context; // ✅ await context for params
+    const id = await params.id; // ✅ extract id correctly
+
     const user = await verifyUser(request);
     const client = await clientPromise;
     const db = client.db("linkhub");
@@ -164,4 +166,5 @@ export async function DELETE(request, { params }) {
     );
   }
 }
+
 

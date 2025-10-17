@@ -6,10 +6,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Trash2, PlusCircle, ArrowBigLeft } from "lucide-react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
-import { Loader2Icon } from "lucide-react";
-import { LoaderCircle } from "lucide-react";
+import { AnimatePresence, Motion } from "framer-motion";
+import { CheckCircle, ClipboardCopy, ClipboardCheck, X } from "lucide-react";
 import InteractiveLoader from "../components/intractiveloader";
 import ProfileImage from "../components/portfolioimg";
 
@@ -26,6 +25,10 @@ function GenerateInner() {
   const [imgError, setImgError] = useState(false);
   const [validPic, setValidPic] = useState(pic);
   const [pageloader, setpageloader] = useState(false);
+  const [successModal, setSuccessModal] = useState(false);
+  const [createdLink, setCreatedLink] = useState("");
+  const [createdHandle, setCreatedHandle] = useState("");
+  const [copied, setCopied] = useState(false);
 
   // ✅ Validate image URL
   useEffect(() => {
@@ -119,6 +122,7 @@ function GenerateInner() {
 
     setLoading(true);
     setpageloader(true);
+
     try {
       const fullLink = `${window.location.origin}/${handle}`;
       const response = await fetch("/api/add", {
@@ -138,46 +142,22 @@ function GenerateInner() {
       });
 
       const result = await response.json();
+
       if (result.success) {
-        toast.success(
-          <div className="flex flex-col gap-1">
-            <span>{result.message}</span>
-            {result.link && (
-              <a
-                href={result.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#D2E823] underline break-all"
-              >
-                {result.link}
-              </a>
-            )}
-          </div>
-        );
+        // ✅ Show success modal
+        setCreatedLink(result.link);
+        setCreatedHandle(handle);
+        setSuccessModal(true);
+        setCopied(false);
+
+        // Reset form
         setLinks([{ link: "", linktext: "" }]);
         setHandle("");
         setPic("");
         setDes("");
         setTheme("blue");
       } else {
-        toast.error(
-          <div>
-            {result.message}
-            {result.link && (
-              <>
-                <br />
-                <a
-                  href={result.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#ff6c03] underline"
-                >
-                  {result.link}
-                </a>
-              </>
-            )}
-          </div>
-        );
+        toast.error(result.message);
       }
     } catch (err) {
       console.error(err);
@@ -427,6 +407,91 @@ function GenerateInner() {
           </motion.div>
         </motion.div>
       </section>
+      <AnimatePresence>
+        {successModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-md z-50"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 40 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 40 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="relative bg-white rounded-2xl p-6 md:p-8 max-w-sm w-[90%] shadow-2xl border border-blue-100"
+            >
+              {/* ❌ Close Button */}
+              <button
+                onClick={() => setSuccessModal(false)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {/* ✅ Success Icon */}
+              <CheckCircle className="w-14 h-14 text-green-500 mx-auto mb-4" />
+
+              {/* ✨ Heading */}
+              <h2 className="text-2xl font-bold text-gray-900 mb-1">
+                LinkHub Created!
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Your unique handle{" "}
+                <span className="font-semibold text-blue-600">
+                  @{createdHandle}
+                </span>{" "}
+                has been generated.
+              </p>
+
+              {/* 🔗 Link Box */}
+              <div className="bg-gray-100 rounded-lg px-4 py-2 flex items-center justify-between">
+                <a
+                  href={createdLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 font-semibold truncate"
+                >
+                  {createdLink}
+                </a>
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(createdLink);
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 1500);
+                  }}
+                  className="text-gray-700 hover:text-blue-600 transition"
+                >
+                  {copied ? (
+                    <ClipboardCheck className="w-5 h-5 text-green-500" />
+                  ) : (
+                    <ClipboardCopy className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+
+              {/* 🎯 Action Buttons */}
+              <div className="flex justify-center gap-3 mt-6">
+                <a
+                  href={createdLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-5 py-2 bg-[#D2E823] text-neutral-900 rounded-full font-semibold hover:bg-[#c1da1f] transition"
+                >
+                  View Page
+                </a>
+                <button
+                  onClick={() => setSuccessModal(false)}
+                  className="px-5 py-2 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 transition"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
