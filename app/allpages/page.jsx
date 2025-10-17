@@ -4,13 +4,20 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import ArrowLeftbt from "../components/backarrowbt";
 import ProfileImage from "../components/portfolioimg";
-import { Eye } from "lucide-react"; // 👈 import Lucide icon
+import { Eye } from "lucide-react";
 
 export default function AllPages() {
   const [pages, setPages] = useState([]);
   const [search, setSearch] = useState("");
   const [filteredPages, setFilteredPages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // ✅ track login
+
+  // ✅ Check login status once
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, []);
 
   // ✅ Fetch all pages
   useEffect(() => {
@@ -43,8 +50,15 @@ export default function AllPages() {
   }, [search, pages]);
 
   return (
-    <section className="min-h-screen bg-gradient-to-b from-[#1e3a8a] via-[#1e40af] to-[#1d4ed8] py-20 px-6 md:px-12 text-white">
-      <ArrowLeftbt />
+    <section className="min-h-screen bg-gradient-to-b from-[#1e3a8a] via-[#1e40af] to-[#1d4ed8] py-12 px-6 md:px-10 text-white">
+      <div className="flex gap-3">
+        <ArrowLeftbt />
+        {/* ✅ Show only when logged in */}
+        {isLoggedIn && (
+          <ArrowLeftbt text="Back to Dashboard" href="/dashboard" />
+        )}
+      </div>
+
       {/* Heading */}
       <div className="max-w-4xl mx-auto text-center mb-10">
         <h1 className="text-5xl font-extrabold text-[#D2E823] mb-3">
@@ -109,7 +123,7 @@ export default function AllPages() {
 
                 {/* ✨ Preview Button */}
                 <a
-                  href={`/preview/${page.handle}`} // 👈 adjust URL to your preview route
+                  href={`/preview/${page.handle}`}
                   className="mt-4 inline-flex items-center gap-2 bg-[#D2E823] text-black font-semibold px-4 py-2 rounded-full hover:bg-[#e7f36c] transition-all shadow-md hover:shadow-lg"
                 >
                   <Eye size={18} />

@@ -2,14 +2,14 @@ import { ArrowBigLeft } from "lucide-react";
 import React from "react";
 import Link from "next/link";
 
-const ArrowLeftbt = () => {
+const ArrowLeftbt = ({ text = "Back to Home", href = "/" }) => {
   return (
     <Link
-      href="/"
-      className=" cursor-pointer absolute top-6 left-6 text-white/80 hover:text-white transition border border-white/20 px-3 py-2 rounded-full bg-white/10 hover:bg-white/20 flex items-center gap-2"
+      href={href}
+      className="cursor-pointer text-white/80 mb-5 hover:text-white transition border border-white/20 px-3 py-2 rounded-full bg-white/10 hover:bg-white/20 flex items-center gap-2 w-fit"
     >
       <ArrowBigLeft />
-      <p className="hidden md:block"> Back to Home</p>
+      <p className="hidden md:block">{text}</p>
     </Link>
   );
 };

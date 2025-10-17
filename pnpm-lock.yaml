@@ -14,9 +14,6 @@ importers:
       bcryptjs:
         specifier: ^3.0.2
         version: 3.0.2
-      emailjs-com:
-        specifier: ^3.2.0
-        version: 3.2.0
       framer-motion:
         specifier: ^12.23.24
         version: 12.23.24(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -840,11 +837,6 @@ packages:
 
   ecdsa-sig-formatter@1.0.11:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
-
-  emailjs-com@3.2.0:
-    resolution: {integrity: sha512-Prbz3E1usiAwGjMNYRv6EsJ5c373cX7/AGnZQwOfrpNJrygQJ15+E9OOq4pU8yC977Z5xMetRfc3WmDX6RcjAA==}
-    engines: {node: '>=12.0.0'}
-    deprecated: The SDK name changed to @emailjs/browser
 
   emoji-regex@9.2.2:
     resolution: {integrity: sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==}
@@ -2719,8 +2711,6 @@ snapshots:
   ecdsa-sig-formatter@1.0.11:
     dependencies:
       safe-buffer: 5.2.1
-
-  emailjs-com@3.2.0: {}
 
   emoji-regex@9.2.2: {}
 

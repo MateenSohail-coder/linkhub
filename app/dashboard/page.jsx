@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import jwt from "jsonwebtoken";
+import { LaptopMinimalCheck } from "lucide-react";
 
 export default function Dashboard() {
   const [pages, setPages] = useState([]);
@@ -121,7 +122,7 @@ export default function Dashboard() {
 
       if (data.success) {
         setPages(pages.filter((p) => p._id !== deleteId));
-        setModalMessage("Page deleted successfully ✅");
+        setModalMessage("Page deleted successfully");
       } else {
         setModalMessage(data.message || "Failed to delete page ❌");
       }
@@ -223,6 +224,9 @@ export default function Dashboard() {
       setMessageType("error");
     } finally {
       setUpdating(false);
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
     }
   };
 
@@ -307,7 +311,7 @@ export default function Dashboard() {
                         Handle:
                         <input
                           type="text"
-                          className="p-3 mt-1 rounded-lg text-neutral-100 border-2 border-neutral-900 w-full focus:ring-2 focus:ring-[#D2E823] focus:border-transparent transition duration-150"
+                          className="w-full px-4 py-3 mt-2 rounded-lg bg-gray-900/80 text-white border border-gray-700 placeholder-gray-400 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-[#D2E823] focus:border-transparent transition-all duration-150"
                           value={editForm.handle}
                           onChange={(e) =>
                             setEditForm({ ...editForm, handle: e.target.value })
@@ -332,7 +336,7 @@ export default function Dashboard() {
                             >
                               <input
                                 type="text"
-                                className="p-2 rounded-md text-neutral-100 border-2 font-bold border-neutral-900  flex-1 focus:ring-1 focus:ring-blue-300"
+                                className="flex-1 px-4 py-3 rounded-lg text-white bg-gray-900/80 border border-gray-700 placeholder-gray-400 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all"
                                 value={linkItem.linktext || ""}
                                 onChange={(e) =>
                                   handleLinkChange(
@@ -343,9 +347,10 @@ export default function Dashboard() {
                                 }
                                 placeholder="Link Title"
                               />
+
                               <input
                                 type="url"
-                                className="p-2 rounded-md text-neutral-100 border-2 font-bold border-neutral-900  flex-1 focus:ring-1 focus:ring-blue-300"
+                                className="flex-1 px-4 py-3 rounded-lg text-white bg-gray-900/80 border border-gray-700 placeholder-gray-400 font-semibold shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all"
                                 value={linkItem.link || ""}
                                 onChange={(e) =>
                                   handleLinkChange(idx, "link", e.target.value)
@@ -537,7 +542,7 @@ export default function Dashboard() {
               </>
             ) : (
               <>
-                <p className="text-center mb-4">{modalMessage}</p>
+                <p className="text-center mb-4 font-bold">{modalMessage}</p>
                 <button
                   className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
                   onClick={() => {
@@ -561,11 +566,11 @@ export default function Dashboard() {
               messageType === "success" ? "#c3e6cb" : "#f5c6cb"
             }`,
             padding: "10px",
-            borderRadius: "5px",
-            marginTop: "10px",
           }}
+          className="fixed top-0 w-full z-50 flex items-center justify-center gap-3 text-center"
         >
-          {message}
+          <LaptopMinimalCheck size={40} color="#0b8413" strokeWidth={1.25} />{" "}
+          <p>{message}</p>
         </div>
       )}
     </>

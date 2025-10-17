@@ -7,13 +7,13 @@ import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
+import emailjs from "@emailjs/browser";
 
 export default function ContactPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -25,23 +25,26 @@ export default function ContactPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message }),
-      });
+      const res = await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
+        {
+          from_name: name,
+          from_email: email,
+          message,
+          website_name: "Linkhub",
+        },
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+      );
 
-      const data = await res.json();
-
-      if (!res.ok) throw new Error(data.message || "Failed to send message");
-
-      toast.success(data.message);
+      console.log("Email sent:", res.text);
+      toast.success("Message sent successfully!");
       setName("");
       setEmail("");
       setMessage("");
     } catch (err) {
-      console.error("Server error:", err);
-      toast.error(err.message || "Failed to send message");
+      console.error("EmailJS Error:", err);
+      toast.error("Failed to send message");
     } finally {
       setLoading(false);
     }
@@ -111,7 +114,7 @@ export default function ContactPage() {
                   placeholder={input.label}
                   className="peer w-full px-4 pt-6 pb-2 rounded-xl bg-white/90 text-gray-900 font-medium focus:outline-none focus:ring-4 focus:ring-[#D2E823]/50 placeholder-transparent shadow-md transition-all"
                 />
-                <label className="absolute left-4 top-2 text-gray-600 text-sm peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base transition-all pointer-events-none">
+                <label className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-base peer-focus:top-3 peer-focus:text-sm peer-focus:text-[#225ac0] peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-gray-400 transition-all pointer-events-none">
                   {input.label}
                 </label>
               </motion.div>
@@ -127,7 +130,7 @@ export default function ContactPage() {
                 required
                 className="peer w-full px-4 pt-6 pb-2 rounded-xl bg-white/90 text-gray-900 font-medium focus:outline-none focus:ring-4 focus:ring-[#D2E823]/50 placeholder-transparent resize-none shadow-md transition-all"
               ></textarea>
-              <label className="absolute left-4 top-2 text-gray-600 text-sm peer-placeholder-shown:top-6 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base transition-all pointer-events-none">
+              <label className="absolute left-4 top-3 text-gray-500 text-base peer-focus:top-2 peer-focus:text-sm peer-focus:text-[#225ac0] peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 transition-all pointer-events-none">
                 Your Message
               </label>
             </motion.div>
