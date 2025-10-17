@@ -6,6 +6,7 @@ import ArrowLeftbt from "../components/backarrowbt";
 import ProfileImage from "../components/portfolioimg";
 import { Eye } from "lucide-react";
 import Footer from "../components/Footer";
+import Link from "next/link";
 
 export default function AllPages() {
   const [pages, setPages] = useState([]);
@@ -124,13 +125,16 @@ export default function AllPages() {
                   </p>
 
                   {/* ✨ Preview Button */}
-                  <a
-                    href={`/${page.handle}`}
-                    className="mt-4 inline-flex items-center gap-2 bg-[#D2E823] text-black font-semibold px-4 py-2 rounded-full hover:bg-[#e7f36c] transition-all shadow-md hover:shadow-lg"
-                  >
-                    <Eye size={18} />
-                    <span>View This Page</span>
-                  </a>
+                  <Link href={`/${page.handle}`} passHref>
+                    <a
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 inline-flex items-center gap-2 bg-[#D2E823] text-black font-semibold px-4 py-2 rounded-full hover:bg-[#e7f36c] transition-all shadow-md hover:shadow-lg"
+                    >
+                      <Eye size={18} />
+                      <span>View This Page</span>
+                    </a>
+                  </Link>
                 </div>
               ))
             ) : (
