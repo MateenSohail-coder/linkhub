@@ -84,17 +84,19 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* Get Started / Dashboard Always on Navbar */}
+        {/* Auth Buttons + Main Action */}
         <div className="flex items-center gap-3">
           {authChecked && (
             <>
               {isLoggedIn ? (
+                // Show Dashboard button always (mobile + desktop)
                 <Link href="/dashboard">
                   <button className="px-5 py-2 bg-[#D2E823] text-neutral-900 font-semibold rounded-full shadow-lg hover:bg-[#c1da1f] transition-all duration-200">
                     Dashboard
                   </button>
                 </Link>
               ) : (
+                // Show Get Started button always (mobile + desktop)
                 <Link href="/register">
                   <button className="px-5 py-2 bg-[#D2E823] text-neutral-900 font-semibold rounded-full shadow-lg hover:bg-[#c1da1f] transition-all duration-200">
                     Get Started
