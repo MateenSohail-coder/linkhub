@@ -125,7 +125,7 @@ export default function AllPages() {
 
                   {/* ✨ Preview Button */}
                   <a
-                    href={`/preview/${page.handle}`}
+                    href={`/${page.handle}`}
                     className="mt-4 inline-flex items-center gap-2 bg-[#D2E823] text-black font-semibold px-4 py-2 rounded-full hover:bg-[#e7f36c] transition-all shadow-md hover:shadow-lg"
                   >
                     <Eye size={18} />
