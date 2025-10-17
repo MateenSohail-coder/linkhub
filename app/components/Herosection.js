@@ -70,19 +70,30 @@ export default function Herosection() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-3 mt-2">
-              <input
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                type="text"
-                placeholder="linkhu.bb/yourname"
-                className="h-14 w-full sm:w-64 px-4 text-sm text-neutral-800 font-semibold bg-white rounded-lg shadow-md focus:outline-none focus:ring-4 focus:ring-[#D2E823]/60 transition-all"
-              />
-              <button
-                onClick={createTree}
-                className="px-6 py-3 sm:py-4 bg-[#D2E823] text-sm md:text-base font-bold text-neutral-900 rounded-full hover:bg-[#c1da1f] active:scale-[0.97] transition-all duration-200 shadow-lg focus:outline-none focus:ring-4 focus:ring-[#D2E823]/50"
-              >
-                Claim your Linkhub
-              </button>
+              {isLoggedIn ? (
+                <>
+                  <input
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    type="text"
+                    placeholder="linkhu.bb/yourname"
+                    className="h-14 w-full sm:w-64 px-4 text-sm text-neutral-800 font-semibold bg-white rounded-lg shadow-md focus:outline-none focus:ring-4 focus:ring-[#D2E823]/60 transition-all"
+                  />
+                  <button
+                    onClick={createTree}
+                    className="px-6 py-3 sm:py-4 bg-[#D2E823] text-sm md:text-base font-bold text-neutral-900 rounded-full hover:bg-[#c1da1f] active:scale-[0.97] transition-all duration-200 shadow-lg focus:outline-none focus:ring-4 focus:ring-[#D2E823]/50"
+                  >
+                    Claim your Linkhub
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => router.push("/signup")}
+                  className="px-6 py-4 bg-[#D2E823] text-sm md:text-base font-bold text-neutral-900 rounded-full hover:bg-[#c1da1f] active:scale-[0.97] transition-all duration-200 shadow-lg focus:outline-none focus:ring-4 focus:ring-[#D2E823]/50"
+                >
+                  Get Started for Free
+                </button>
+              )}
             </div>
           </motion.div>
 
