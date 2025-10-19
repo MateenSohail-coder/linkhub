@@ -25,6 +25,7 @@ export default function Dashboard() {
   const [message, setMessage] = useState(null);
   const [messageType, setMessageType] = useState(""); // "success" or "error"
   const [copied, setCopied] = useState(null);
+  const [deleteloader, setdeleteloader] = useState(false);
 
   const copyToClipboard = async (text, index) => {
     try {
@@ -120,12 +121,14 @@ export default function Dashboard() {
     }
   };
 
-  const handleDeletePage = (id) => {
+  const handleDeletePage = async (id) => {
     setDeleteId(id);
-    setShowConfirm(true); // open modal
+    setShowConfirm(true);
   };
   const handleConfirmDelete = async () => {
     try {
+      setdeleteloader(true);
+
       const token = localStorage.getItem("token");
       const res = await fetch(`/api/my-links/${deleteId}`, {
         method: "DELETE",
@@ -146,6 +149,7 @@ export default function Dashboard() {
       setModalMessage("Failed to delete page ❌");
     } finally {
       setDeleteId(null);
+      setdeleteloader(false);
     }
   };
 
@@ -555,7 +559,7 @@ export default function Dashboard() {
                         onClick={handleConfirmDelete}
                         className="px-5 py-2.5 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-full font-semibold shadow-md hover:shadow-lg transition-all"
                       >
-                        Delete
+                        {deleteloader ? "Deleting..." : "Delete"}
                       </motion.button>
 
                       <motion.button
