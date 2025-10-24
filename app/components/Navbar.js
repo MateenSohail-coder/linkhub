@@ -62,7 +62,7 @@ export default function Navbar() {
               className="object-contain"
             />
           </div>
-          <span className="hidden md:block text-2xl font-bold text-white tracking-wide">
+          <span className="hidden lg:block text-2xl font-bold text-white tracking-wide">
             Linkhub
           </span>
         </Link>
@@ -100,6 +100,20 @@ export default function Navbar() {
                 <Link href="/register">
                   <button className="px-5 py-2 bg-[#D2E823] text-neutral-900 font-semibold rounded-full shadow-lg hover:bg-[#c1da1f] transition-all duration-200">
                     Get Started
+                  </button>
+                </Link>
+              )}
+              {isLoggedIn ? (
+                <button
+                  onClick={handleLogout}
+                  className="md:flex hidden items-center w-30 justify-center gap-1 px-5 py-2 bg-red-500 text-white rounded-full shadow hover:bg-red-600 transition"
+                >
+                  <LogOut size={18} /> Logout
+                </button>
+              ) : (
+                <Link href="/login" onClick={() => setIsOpen(false)}>
+                  <button className="px-5 py-2 w-70 cursor-pointer rounded-full font-semibold text-white bg-[#225ac0]/80 hover:bg-[#225ac0]/60 transition">
+                    Login
                   </button>
                 </Link>
               )}
