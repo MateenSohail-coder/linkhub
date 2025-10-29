@@ -68,7 +68,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-5  lg:gap-8">
           {navLinks.map((link) => (
             <Link
               key={link.path}
@@ -85,7 +85,7 @@ export default function Navbar() {
         </div>
 
         {/* Auth Buttons + Main Action */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-0.5 sm:gap-3">
           {authChecked && (
             <>
               {isLoggedIn ? (
@@ -98,7 +98,7 @@ export default function Navbar() {
               ) : (
                 // Show Get Started button always (mobile + desktop)
                 <Link href="/register">
-                  <button className="px-5 py-2 bg-[#D2E823] text-neutral-900 font-semibold rounded-full shadow-lg hover:bg-[#c1da1f] transition-all duration-200">
+                  <button className="sm:px-5 py-2 px-3 text-sm sm:text-1xl bg-[#D2E823] text-neutral-900 font-semibold rounded-full shadow-lg hover:bg-[#c1da1f] transition-all duration-200">
                     Get Started
                   </button>
                 </Link>
@@ -112,7 +112,7 @@ export default function Navbar() {
                 </button>
               ) : (
                 <Link href="/login" onClick={() => setIsOpen(false)}>
-                  <button className="px-5 py-2 w-70 cursor-pointer rounded-full font-semibold text-white bg-[#225ac0]/80 hover:bg-[#225ac0]/60 transition">
+                  <button className="px-5 py-2 w-22 xl:w-50 md:block hidden cursor-pointer rounded-full font-semibold text-white border-2 hover:bg-white hover:text-[#225ac0] border-white bg-[#225ac0]/80 transition">
                     Login
                   </button>
                 </Link>
