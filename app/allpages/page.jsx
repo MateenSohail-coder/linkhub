@@ -112,9 +112,7 @@ export default function AllPages() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-300 hover:text-blue-100 mt-1 text-sm break-all transition-colors"
-                  >
-                    {page.link}
-                  </a>
+                  ></a>
 
                   {/* Date */}
                   <p className="text-sm text-gray-200/80 mt-2">
