@@ -79,7 +79,7 @@ export default function ContactPage() {
           </h1>
           <p className="text-white/80 text-center max-w-md mb-10">
             Have questions, suggestions, or just want to say hi? Send us a
-            message and we’ll get back to you as soon as possible.
+            message and we'll get back to you as soon as possible.
           </p>
 
           <motion.form
@@ -92,13 +92,13 @@ export default function ContactPage() {
             {/* Name & Email */}
             {[
               {
-                label: "Your Name",
+                placeholder: "Your Name",
                 value: name,
                 setter: setName,
                 type: "text",
               },
               {
-                label: "Your Email",
+                placeholder: "Your Email",
                 value: email,
                 setter: setEmail,
                 type: "email",
@@ -114,12 +114,9 @@ export default function ContactPage() {
                   value={input.value}
                   onChange={(e) => input.setter(e.target.value)}
                   required
-                  placeholder={input.label}
-                  className="peer w-full px-4 pt-6 pb-2 rounded-xl bg-white/90 text-gray-900 font-medium focus:outline-none focus:ring-4 focus:ring-[#D2E823]/50 placeholder-transparent shadow-md transition-all"
+                  placeholder={input.placeholder}
+                  className="w-full px-4 py-4 rounded-xl bg-white/90 text-gray-900 font-medium focus:outline-none focus:ring-4 focus:ring-[#D2E823]/50 placeholder-gray-500 shadow-md transition-all"
                 />
-                <label className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-base peer-focus:top-3 peer-focus:text-sm peer-focus:text-[#225ac0] peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-gray-400 transition-all pointer-events-none">
-                  {input.label}
-                </label>
               </motion.div>
             ))}
 
@@ -131,11 +128,8 @@ export default function ContactPage() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 required
-                className="peer w-full px-4 pt-6 pb-2 rounded-xl bg-white/90 text-gray-900 font-medium focus:outline-none focus:ring-4 focus:ring-[#D2E823]/50 placeholder-transparent resize-none shadow-md transition-all"
+                className="w-full px-4 py-4 rounded-xl bg-white/90 text-gray-900 font-medium focus:outline-none focus:ring-4 focus:ring-[#D2E823]/50 placeholder-gray-500 resize-none shadow-md transition-all"
               ></textarea>
-              <label className="absolute left-4 top-3 text-gray-500 text-base peer-focus:top-2 peer-focus:text-sm peer-focus:text-[#225ac0] peer-placeholder-shown:top-3 peer-placeholder-shown:text-gray-400 transition-all pointer-events-none">
-                Your Message
-              </label>
             </motion.div>
 
             {/* Submit Button */}
