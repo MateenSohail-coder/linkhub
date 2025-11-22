@@ -2,6 +2,7 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Link from "next/link";
 import { Shield, Lock, FileText, Server, Globe } from "lucide-react";
 
 const sections = [
@@ -100,7 +101,7 @@ export default function PrivacyPolicy() {
               Privacy Policy
             </h1>
             <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              Transparency is at the core of Linkhub. Here's how we handle your data with the care it deserves.
+              Transparency is at the core of Linkhub. Here&apos;s how we handle your data with the care it deserves.
             </p>
           </div>
 
@@ -130,12 +131,12 @@ export default function PrivacyPolicy() {
 
           <div className="mt-20 text-center pt-10 border-t border-white/20">
             <p className="text-white/80 mb-4">Questions about your privacy?</p>
-            <a
+            <Link
               href="/contact"
               className="inline-flex items-center gap-2 px-8 py-3 rounded-full bg-[#D2E823] text-[#1a2a6c] font-bold hover:bg-white hover:text-[#225ac0] transition-all hover:scale-105 shadow-lg"
             >
               Contact Support
-            </a>
+            </Link>
           </div>
         </div>
       </main>
