@@ -79,7 +79,7 @@ export default function ContactPage() {
           </h1>
           <p className="text-white/80 text-center max-w-md mb-10">
             Have questions, suggestions, or just want to say hi? Send us a
-            message and we'll get back to you as soon as possible.
+            message and we&apos;ll get back to you as soon as possible.
           </p>
 
           <motion.form

@@ -32,7 +32,7 @@ export default function Footer() {
     },
     {
       icon: <Github size={20} />,
-      href: "https://github.com/MateenSohail-coder/linkhub.git",
+      href: "https://github.com/MateenSohail-coder",
     },
     {
       icon: <Fiverr className="w-7 h-7" />,
@@ -120,7 +120,7 @@ export default function Footer() {
             Privacy Policy
           </Link>
           <Link
-            href="/terms"
+            href="/privacy"
             className="text-white/80 hover:text-[#D2E823] transition-colors"
           >
             Terms & Conditions

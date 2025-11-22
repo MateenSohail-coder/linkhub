@@ -106,7 +106,7 @@ export default function Herosection() {
           >
             <div className="w-[70%] md:w-[60%] aspect-[3/4] rounded-3xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.35)] border border-white/20 bg-white/10 backdrop-blur-md relative">
               <Image
-                src="/heropic.png"
+                src="/hero.png"
                 alt="Linkhub Preview"
                 fill
                 priority
